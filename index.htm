@@ -5,21 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simetrias dos Sólidos de Platão</title>
     <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.0/dist/flatly/bootstrap.min.css" rel="stylesheet">
+    
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
     <style>
         body { margin: 0; padding: 0; }
         
-        /* SIDEBAR_STYLE idêntico ao Python */
         .sidebar {
             position: fixed; top: 0; left: 0; bottom: 0;
             width: 18rem; padding: 2rem 1rem;
             background-color: #2c3e50; color: white;
+            overflow-y: auto;
         }
-        /* Estilos do dbc.Nav pills do Dash */
         .sidebar .nav-pills .nav-link { color: #e0e2e2; margin-bottom: 2px; border-radius: 0.25rem; cursor: pointer;}
-        .sidebar .nav-pills .nav-link.active { background-color: #18bc9c; color: white; } /* Cor primary do Flatly */
+        .sidebar .nav-pills .nav-link.active { background-color: #18bc9c; color: white; }
 
-        /* CONTENT_STYLE idêntico ao Python */
         .content {
             margin-left: 20rem; margin-right: 2rem; padding: 2rem 1rem;
         }
@@ -27,7 +40,6 @@
         .page { display: none; }
         .page.active { display: block; }
         
-        /* Layout Flex idêntico ao Python */
         .solid-container { display: flex; height: 75vh; }
         .control-panel { 
             width: 30%; padding: 20px; border-right: 1px solid #ccc; 
@@ -35,14 +47,19 @@
         }
         .graph-panel { width: 70%; height: 100%; }
         
-        /* Emulando os marks do dcc.Slider */
         .slider-marks { display: flex; justify-content: space-between; font-size: 12px; color: #7b8a8b; margin-top: -5px; }
+        
+        /* Estilos adicionais para os textos matemáticos */
+        .math-content h2 { margin-top: 2rem; color: #2c3e50; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px;}
+        .math-content h3 { margin-top: 1.5rem; color: #18bc9c; }
+        .math-content p { font-size: 18px; line-height: 1.8; text-align: justify; }
+        .math-content .demonstracao { font-style: italic; color: #555; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <h4 class="display-6" style="color: white;">Simetrias dos Sólidos de Platão</h4>
+        <h4 class="display-6" style="color: white; font-size: 24px;">Simetrias dos Sólidos de Platão</h4>
         <hr style="border-color: white;">
         <nav class="nav nav-pills flex-column">
             <a class="nav-link active" onclick="navigate('/', this)">Fundamentos e Teoremas</a>
@@ -54,399 +71,133 @@
 
     <div id="page-content" class="content">
         
-        <div id="page-home" class="page active">
-            <h1 class="text-primary">Classes de grupos e exemplos notáveis</h1>
-            <hr>
-            <div style="font-size: 18px; line-height: 1.8;">
-                <h2 id="o-grupo-simétrico-s_n">O Grupo Simétrico <span
-                class="math inline"><em>S</em><sub><em>n</em></sub></span></h2>
-                <p>O grupo <span
-                class="math inline"><em>S</em><sub><em>n</em></sub></span> é um grupo de
-                permutações de elementos. Mais precisamente, seja <span
-                class="math inline"><em>A</em></span> um conjunto finito <span
-                class="math inline">{1, 2, …, <em>n</em>}</span>. Se tomarmos todas as
-                funções bijetoras de <span class="math inline"><em>A</em></span> em
-                <span class="math inline"><em>A</em></span>, o que elas fazem é permutar
-                os elementos. A composição de uma função bijetora é ainda uma função
-                bijetora. O número de bijeção de <span
-                class="math inline"><em>n</em></span> elementos é <span
-                class="math inline"><em>n</em>!</span>.</p>
-                <p>Com essas operações temos um grupo que é chamado de grupo das
-                permutações, ou ainda grupo simétrico <span
-                class="math inline"><em>S</em><sub><em>n</em></sub></span>. <span
-                class="math inline"><em>S</em><sub><em>n</em></sub></span> tem <span
-                class="math inline"><em>n</em>!</span> elementos, onde <span
-                class="math inline"><em>n</em>! = <em>n</em>(<em>n</em> − 1)(<em>n</em> − 2)…(3)(2)(1)</span>.</p>
-                <p>O grupo <span
-                class="math inline"><em>S</em><sub><em>n</em></sub></span> possui um
-                teorema importante, o Teorema de Cayley, que afirma que, se <span
-                class="math inline"><em>G</em></span> é um grupo, então <span
-                class="math inline"><em>G</em></span> é isomorfo a um subgrupo de <span
-                class="math inline"><em>S</em><sub><em>G</em></sub></span>. Além desse
-                teorema, temos que, se <span class="math inline"><em>G</em></span> é um
-                grupo finito de ordem <span class="math inline"><em>n</em></span>, então
-                <span class="math inline"><em>G</em></span> é isomorfo a um subgrupo de
-                <span class="math inline"><em>S</em><sub><em>n</em></sub></span>.</p>
-                <p>O grupo <span
-                class="math inline"><em>S</em><sub><em>n</em></sub></span> pode ser
-                obtido fazendo todas as possíveis combinações com os elementos <span
-                class="math inline">(1 2)</span> e <span
-                class="math inline">(1 2 … <em>n</em>)</span>. Resumidamente é o que diz
-                o corolário a seguir:</p>
-                <p><strong>Corolário:</strong> Os ciclos <span
-                class="math inline">(1 2)</span> e <span
-                class="math inline">(1 2 … <em>n</em>)</span> geram o grupo <span
-                class="math inline"><em>S</em><sub><em>n</em></sub></span>.</p>
-                <p><em>Demonstração:</em> Seja <span
-                class="math inline"><em>t</em> = (1 2)</span> e <span
-                class="math inline"><em>a</em> = (1 2 … <em>n</em>)</span>, e seja <span
-                class="math inline"><em>G</em> = ⟨<em>a</em>, <em>t</em>⟩</span> o grupo
-                gerado por <span class="math inline"><em>a</em></span> e <span
-                class="math inline"><em>t</em></span>. Primeiro, mostramos que <span
-                class="math inline"><em>G</em></span> contém todas as transposições
-                adjacentes. Através da conjugação de <span
-                class="math inline"><em>t</em></span> por potências de <span
-                class="math inline"><em>a</em></span>, obtemos: <span
-                class="math display"><em>a</em><em>t</em><em>a</em><sup>−1</sup> = (2 3)</span>
-                <span
-                class="math display"><em>a</em><sup>2</sup><em>t</em><em>a</em><sup>−2</sup> = <em>a</em>(2 3)<em>a</em><sup>−1</sup> = (3 4)</span>
-                e, em geral, para <span
-                class="math inline"><em>k</em> = 1, 2, …, <em>n</em> − 2</span>, <span
-                class="math display"><em>a</em><sup><em>k</em></sup><em>t</em><em>a</em><sup>−<em>k</em></sup> = (<em>k</em> + 1, <em>k</em> + 2).</span>
-                Assim, <span class="math inline"><em>G</em></span> contém as
-                transposições <span
-                class="math inline">(2, 3), (3, 4), …, (<em>n</em> − 1, <em>n</em>)</span>.
-                Como <span class="math inline"><em>G</em></span> já contém <span
-                class="math inline"><em>t</em> = (1, 2)</span>, concluímos que <span
-                class="math inline"><em>G</em></span> contém todas as transposições
-                adjacentes. Pode ser provado que o conjunto de transposições adjacentes
-                geram <span class="math inline"><em>S</em><sub><em>n</em></sub></span>,
-                e todas elas pertencem a <span class="math inline"><em>G</em></span>,
-                segue que <span class="math inline"><em>G</em></span> deve ser o próprio
-                <span class="math inline"><em>S</em><sub><em>n</em></sub></span>. <span
-                class="math inline">◼</span></p>
-                <h2 id="o-grupo-alternado-a_n">O Grupo Alternado <span
-                class="math inline"><em>A</em><sub><em>n</em></sub></span></h2>
-                <p>O grupo alternado, denotado por <span
-                class="math inline"><em>A</em><sub><em>n</em></sub></span>, é subgrupo
-                do grupo simétrico <span
-                class="math inline"><em>S</em><sub><em>n</em></sub></span> do conjunto
-                <span class="math inline">{1, 2, 3, …, <em>n</em>}</span> que contém as
-                permutações de ordem par. Uma permutação par é uma permutação que,
-                quando escrita como um produto de transposições, usa um número par de
-                transposições. Pode ser provado que este número par é uma
-                invariante.</p>
-                <p><strong>Teorema:</strong> As permutações pares em <span
-                class="math inline"><em>S</em><sub><em>n</em></sub></span> formam um
-                subgrupo de ordem <span class="math inline"><em>n</em>!/2</span>,
-                chamado de grupo alternado <span
-                class="math inline"><em>A</em><sub><em>n</em></sub></span> de grau <span
-                class="math inline"><em>n</em></span>.</p>
-                <p><strong>Teorema:</strong> Para <span
-                class="math inline"><em>n</em> ≥ 3</span>, os <span
-                class="math inline">3−</span>ciclos geram o <span
-                class="math inline"><em>A</em><sub><em>n</em></sub></span>.</p>
-                <p><em>Demonstração:</em> Cada <span class="math inline">3−</span>ciclos
-                é uma permutação par, dado um elemento de <span
-                class="math inline"><em>A</em><sub><em>n</em></sub></span> usamos o
-                corolário para escrever como um produto de pares de transposição da
-                forma <span class="math inline">(1<em>a</em>)</span>. Tome essas
-                transposições em pares adjacentes e combine esses pares usando <span
-                class="math inline">(1<em>a</em>)(1<em>b</em>) = (1<em>b</em><em>a</em>)</span>.
-                Nosso elemento é agora um produto de <span
-                class="math inline">3−</span>ciclos. <span
-                class="math inline">◼</span></p>
-                <h2 id="o-grupo-diedral-d_n">O Grupo Diedral <span
-                class="math inline"><em>D</em><sub><em>n</em></sub></span></h2>
-                <p>Também temos o grupo diedral <span
-                class="math inline"><em>D</em><sub><em>n</em></sub></span>, grupo não
-                abeliano das simetrias de um polígono regular de <span
-                class="math inline"><em>n</em></span> lados. Por exemplo, se <span
-                class="math inline"><em>n</em> = 3</span> temos um triângulo, que tem um
-                total de seis rotações simétricas, sendo três rotações (<span
-                class="math inline"><em>r</em></span>) e três reflexões (<span
-                class="math inline"><em>s</em></span>). Temos então: <span
-                class="math inline"><em>D</em><sub>3</sub> = {<em>e</em>, <em>r</em>, <em>r</em><sup>2</sup>, <em>s</em>, <em>r</em><em>s</em>, <em>r</em><sup>2</sup><em>s</em>}</span>.</p>
-                <div class="alvo-cayley">
-                
-                </div>
-                <table>
-                <thead>
-                <tr class="header">
-                <th></th>
-                <th><span class="math inline"><em>e</em></span></th>
-                <th><span class="math inline"><em>r</em></span></th>
-                <th><span class="math inline"><em>r</em><sup>2</sup></span></th>
-                <th><span class="math inline"><em>s</em></span></th>
-                <th><span class="math inline"><em>r</em><em>s</em></span></th>
-                <th><span
-                class="math inline"><em>r</em><sup>2</sup><em>s</em></span></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="odd">
-                <td><span class="math inline"><em>e</em></span></td>
-                <td><span class="math inline"><em>e</em></span></td>
-                <td><span class="math inline"><em>r</em></span></td>
-                <td><span class="math inline"><em>r</em><sup>2</sup></span></td>
-                <td><span class="math inline"><em>s</em></span></td>
-                <td><span class="math inline"><em>r</em><em>s</em></span></td>
-                <td><span
-                class="math inline"><em>r</em><sup>2</sup><em>s</em></span></td>
-                </tr>
-                <tr class="even">
-                <td><span class="math inline"><em>r</em></span></td>
-                <td><span class="math inline"><em>r</em></span></td>
-                <td><span class="math inline"><em>r</em><sup>2</sup></span></td>
-                <td><span class="math inline"><em>e</em></span></td>
-                <td><span class="math inline"><em>r</em><em>s</em></span></td>
-                <td><span
-                class="math inline"><em>r</em><sup>2</sup><em>s</em></span></td>
-                <td><span class="math inline"><em>s</em></span></td>
-                </tr>
-                <tr class="odd">
-                <td><span class="math inline"><em>r</em><sup>2</sup></span></td>
-                <td><span class="math inline"><em>r</em><sup>2</sup></span></td>
-                <td><span class="math inline"><em>e</em></span></td>
-                <td><span class="math inline"><em>r</em></span></td>
-                <td><span
-                class="math inline"><em>r</em><sup>2</sup><em>s</em></span></td>
-                <td><span class="math inline"><em>s</em></span></td>
-                <td><span class="math inline"><em>r</em><em>s</em></span></td>
-                </tr>
-                <tr class="even">
-                <td><span class="math inline"><em>s</em></span></td>
-                <td><span class="math inline"><em>s</em></span></td>
-                <td><span
-                class="math inline"><em>r</em><sup>2</sup><em>s</em></span></td>
-                <td><span class="math inline"><em>r</em><em>s</em></span></td>
-                <td><span class="math inline"><em>e</em></span></td>
-                <td><span class="math inline"><em>r</em><sup>2</sup></span></td>
-                <td><span class="math inline"><em>r</em></span></td>
-                </tr>
-                <tr class="odd">
-                <td><span class="math inline"><em>r</em><em>s</em></span></td>
-                <td><span class="math inline"><em>r</em><em>s</em></span></td>
-                <td><span class="math inline"><em>s</em></span></td>
-                <td><span
-                class="math inline"><em>r</em><sup>2</sup><em>s</em></span></td>
-                <td><span class="math inline"><em>r</em></span></td>
-                <td><span class="math inline"><em>e</em></span></td>
-                <td><span class="math inline"><em>r</em><sup>2</sup></span></td>
-                </tr>
-                <tr class="even">
-                <td><span
-                class="math inline"><em>r</em><sup>2</sup><em>s</em></span></td>
-                <td><span
-                class="math inline"><em>r</em><sup>2</sup><em>s</em></span></td>
-                <td><span class="math inline"><em>r</em><em>s</em></span></td>
-                <td><span class="math inline"><em>s</em></span></td>
-                <td><span class="math inline"><em>r</em><sup>2</sup></span></td>
-                <td><span class="math inline"><em>r</em></span></td>
-                <td><span class="math inline"><em>e</em></span></td>
-                </tr>
-                </tbody>
-                </table>
-                <p><em>Tabela: Tabela do grupo <span
-                class="math inline"><em>D</em><sub>3</sub></span></em></p>
-                <h2 id="grupos-ortogonais-o_n-e-so_n">Grupos Ortogonais <span
-                class="math inline"><em>O</em><sub><em>n</em></sub></span> e <span
-                class="math inline"><em>S</em><em>O</em><sub><em>n</em></sub></span></h2>
-                <p>Uma matriz <span
-                class="math inline"><em>A</em><sub><em>n</em> × <em>n</em></sub></span>
-                é ortogonal se satisfaz: <span
-                class="math display"><em>A</em><sup><em>t</em></sup><em>A</em> = <em>I</em>,</span>
-                onde <span class="math inline"><em>I</em></span> é a matriz identidade e
-                <span class="math inline"><em>A</em><sup><em>t</em></sup></span> é a
-                matriz transposta de <span class="math inline"><em>A</em></span>. Isso
-                significa que as colunas de <span class="math inline"><em>A</em></span>
-                formam uma base ortonormal de <span
-                class="math inline">ℝ<sup><em>n</em></sup></span>. O mesmo vale para as
-                linhas. Como <span
-                class="math inline">det (<em>A</em><sup><em>t</em></sup><em>A</em>) = (det <em>A</em>)<sup>2</sup></span>,
-                o determinante de uma matriz ortogonal é sempre <span
-                class="math inline">±1</span>.</p>
-                <p>O conjunto de todas as matrizes ortogonais <span
-                class="math inline"><em>n</em> × <em>n</em></span> formam um subgrupo do
-                grupo linear geral, denotado por <span
-                class="math inline"><em>G</em><em>L</em><sub><em>n</em></sub>(ℝ)</span>.
-                Esse subgrupo é chamado de grupo ortogonal <span
-                class="math inline"><em>O</em><sub><em>n</em></sub></span>. O
-                subconjunto de <span
-                class="math inline"><em>O</em><sub><em>n</em></sub></span> formado pelas
-                matrizes com determinante igual a <span class="math inline">1</span> é
-                chamado de grupo ortogonal especial <span
-                class="math inline"><em>S</em><em>O</em><sub><em>n</em></sub></span>.</p>
-                <p><strong>Proposição:</strong> Seja <span
-                class="math inline"><em>A</em> ∈ <em>O</em><sub><em>n</em></sub></span>
-                e <span
-                class="math inline"><em>f</em><sub><em>A</em></sub> : ℝ<sup><em>n</em></sup> → ℝ<sup><em>n</em></sup></span>
-                a transformação linear dada por <span
-                class="math inline"><em>f</em><sub><em>A</em></sub>(<em>x</em>) = <em>A</em><em>x</em></span>.
-                Então <span class="math inline"><em>f</em><sub><em>A</em></sub></span> é
-                uma isometria, isto é, <span
-                class="math display">||<em>f</em><sub><em>A</em></sub>(<em>x</em>) − <em>f</em><sub><em>A</em></sub>(<em>y</em>)|| = ||<em>x</em> − <em>y</em>||,  ∀<em>x</em>, <em>y</em> ∈ ℝ<sup><em>n</em></sup>.</span></p>
-                <p><em>Demonstração:</em> Calculando <span
-                class="math inline">||<em>f</em><sub><em>A</em></sub>(<em>x</em>)||<sup>2</sup></span>,
-                temos: <span
-                class="math display">||<em>f</em><sub><em>A</em></sub>(<em>x</em>)||<sup>2</sup> = <em>f</em><sub><em>A</em></sub>(<em>x</em>) ⋅ <em>f</em><sub><em>A</em></sub>(<em>x</em>) = (<em>A</em><em>x</em>)<sup><em>t</em></sup>(<em>A</em><em>x</em>) = <em>x</em><sup><em>t</em></sup><em>A</em><sup><em>t</em></sup><em>A</em><em>x</em> = <em>x</em><sup><em>t</em></sup><em>x</em> = ||<em>x</em>||<sup>2</sup> ⇒ ||<em>f</em><sub><em>A</em></sub>(<em>x</em>)|| = ||<em>x</em>||</span>
-                Logo seu comprimento é preservado. Também, <span
-                class="math inline">||<em>f</em><sub><em>A</em></sub>(<em>x</em>) − <em>f</em><sub><em>A</em></sub>(<em>y</em>)|| = ||<em>f</em><sub><em>A</em></sub>(<em>x</em> − <em>y</em>)|| = ||<em>x</em> − <em>y</em>||</span>,
-                mostra que <span
-                class="math inline"><em>f</em><sub><em>A</em></sub></span> preserva a
-                distância entre dois pontos. Note que a ortogonalidade também é
-                preservada. <span class="math inline">◼</span></p>
-                <p><strong>Teorema:</strong> Seja <span
-                class="math inline"><em>A</em> ∈ <em>S</em><em>O</em><sub>3</sub></span>.
-                Então <span class="math inline"><em>A</em></span> é uma rotação em <span
-                class="math inline">ℝ<sup>3</sup></span> em torno de um eixo que passa
-                pela origem, isto é, existe um vetor <span
-                class="math inline"><em>v</em> ∈ ℝ<sup>3</sup> \ {0}</span> tal que
-                <span class="math inline"><em>A</em><em>v</em> = <em>v</em></span> e a
-                restrição de <span class="math inline"><em>A</em></span> ao plano
-                ortogonal a <span class="math inline"><em>v</em></span> é uma rotação
-                plana.</p>
-                <p><em>Demonstração:</em> Seja <span
-                class="math inline"><em>A</em> ∈ <em>S</em><em>O</em><sub>3</sub></span>.
-                Como <span
-                class="math inline"><em>A</em> ∈ <em>O</em><sub>3</sub></span>, temos
-                que <span
-                class="math inline"><em>A</em><sup><em>T</em></sup><em>A</em> = <em>I</em></span>,
-                ou seja, <span class="math inline"><em>A</em></span> é uma matriz
-                ortogonal. O polinômio característico de <span
-                class="math inline"><em>A</em></span>, pelo Teorema Fundamental da
-                Álgebra, possui pelo menos uma raiz real. Como <span
-                class="math inline"><em>A</em> ∈ <em>S</em><em>O</em><sub>3</sub></span>,
-                então <span
-                class="math inline">det <em>A</em> = <em>λ</em><sub>1</sub><em>λ</em><sub>2</sub><em>λ</em><sub>3</sub> = 1</span>.
-                O autovalor real é necessariamente <span
-                class="math inline"><em>λ</em><sub>1</sub> = 1</span>. Seja <span
-                class="math inline"><em>v</em> ∈ ℝ<sup>3</sup></span> um autovetor
-                associado ao autovalor <span class="math inline">1</span>, então <span
-                class="math inline"><em>A</em><em>v</em> = <em>v</em></span>. Na base
-                <span
-                class="math inline">{<em>v</em>, <em>v</em><sub>1</sub>, <em>v</em><sub>2</sub>}</span>,
-                a matriz <span class="math inline"><em>A</em></span> representa uma
-                rotação plana de <span
-                class="math inline"><em>S</em><em>O</em><sub>2</sub></span> sobre o
-                plano ortogonal. Assim, toda matriz de <span
-                class="math inline"><em>S</em><em>O</em><sub>3</sub></span> representa
-                uma rotação em <span class="math inline">ℝ<sup>3</sup></span> em torno
-                de um eixo que passa pela origem. <span class="math inline">◼</span></p>
-                <h2 id="grupos-de-simetria-dos-sólidos-platônicos">Grupos de Simetria
-                dos Sólidos Platônicos</h2>
-                Existem exatamente cinco sólidos platônicos no espaço euclidiano
-                tridimensional. Seus grupos de simetria atuam de forma transitiva sobre
-                vértices, arestas e faces.
-                <div class="alvo-platonico">
-                
-                </div>
-                <table style="width:100%;">
-                <colgroup>
-                <col style="width: 23%" />
-                <col style="width: 17%" />
-                <col style="width: 16%" />
-                <col style="width: 14%" />
-                <col style="width: 28%" />
-                </colgroup>
-                <thead>
-                <tr class="header">
-                <th>Sólido Platônico</th>
-                <th style="text-align: center;">Vértices (V)</th>
-                <th style="text-align: center;">Arestas (A)</th>
-                <th style="text-align: center;">Faces (F)</th>
-                <th style="text-align: center;">Forma da Face</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="odd">
-                <td>Tetraedro</td>
-                <td style="text-align: center;">4</td>
-                <td style="text-align: center;">6</td>
-                <td style="text-align: center;">4</td>
-                <td style="text-align: center;">Triângulo equilátero</td>
-                </tr>
-                <tr class="even">
-                <td>Cubo</td>
-                <td style="text-align: center;">8</td>
-                <td style="text-align: center;">12</td>
-                <td style="text-align: center;">6</td>
-                <td style="text-align: center;">Quadrado</td>
-                </tr>
-                <tr class="odd">
-                <td>Octaedro</td>
-                <td style="text-align: center;">6</td>
-                <td style="text-align: center;">12</td>
-                <td style="text-align: center;">8</td>
-                <td style="text-align: center;">Triângulo equilátero</td>
-                </tr>
-                <tr class="even">
-                <td>Dodecaedro</td>
-                <td style="text-align: center;">20</td>
-                <td style="text-align: center;">30</td>
-                <td style="text-align: center;">12</td>
-                <td style="text-align: center;">Pentágono regular</td>
-                </tr>
-                <tr class="odd">
-                <td>Icosaedro</td>
-                <td style="text-align: center;">12</td>
-                <td style="text-align: center;">30</td>
-                <td style="text-align: center;">20</td>
-                <td style="text-align: center;">Triângulo equilátero</td>
-                </tr>
-                </tbody>
-                </table>
-                <p><em>Tabela: Características dos Sólidos Platônicos</em></p>
-                <p><strong>Definição (Sólidos Duais):</strong> O poliedro dual de um
-                sólido regular é outro poliedro que pode ser construído conectando os
-                centros de cada face do sólido original, inscrevendo este novo poliedro
-                dual dentro do original.</p>
-                <p><strong>Lema:</strong> Se dois sólidos são duais, então eles possuem
-                o mesmo grupo de simetria.</p>
-                <p><em>Demonstração:</em> Seja <span
-                class="math inline"><em>g</em></span> uma simetria (isometria) que
-                mapeia o poliedro <span class="math inline"><em>P</em></span> em si
-                mesmo. Tal transformação <span class="math inline"><em>g</em></span>
-                permuta as faces de <span class="math inline"><em>P</em></span>, e
-                portanto também os seus centros, que correspondem aos vértices de <span
-                class="math inline"><em>P</em><sup>*</sup></span>. Portanto, toda
-                simetria de <span class="math inline"><em>P</em></span> é também uma
-                simetria de <span class="math inline"><em>P</em><sup>*</sup></span>.
-                Como o dual do dual é o poliedro original, ambos compartilham exatamente
-                o mesmo grupo. <span class="math inline">◼</span></p>
-                <h3 id="tetraedro">Tetraedro</h3>
-                <p>Existem 12 simetrias de rotação para o tetraedro regular. O conjunto
-                dessas simetrias forma um grupo isomorfo ao grupo alternado <span
-                class="math inline"><em>A</em><sub>4</sub></span>. Definimos o
-                homomorfismo <span
-                class="math inline"><em>φ</em> : <em>G</em> → <em>S</em><sub>4</sub></span>,
-                associando cada rotação a uma permutação dos vértices <span
-                class="math inline">{1, 2, 3, 4}</span>.</p>
-                <h3 id="cubo-e-octaedro">Cubo e Octaedro</h3>
-                <p>O cubo tem 24 simetrias rotacionais. Numerando as 4 diagonais
-                principais do cubo, podemos associar cada rotação a uma permutação
-                dessas diagonais, gerando um homomorfismo <span
-                class="math inline"><em>φ</em> : <em>G</em> → <em>S</em><sub>4</sub></span>.
-                Como o cubo e o octaedro são duais, ambos compartilham o mesmo grupo de
-                rotações <span class="math inline"><em>S</em><sub>4</sub></span>.</p>
-                <h3 id="dodecaedro-e-icosaedro">Dodecaedro e Icosaedro</h3>
-                <p>O dodecaedro possui 60 simetrias rotacionais (24 de faces, 20 de
-                vértices, 15 de arestas, mais a identidade). Inscrevendo cinco cubos no
-                interior do dodecaedro, cada rotação permuta esses cinco cubos. Isso nos
-                dá o isomorfismo <span
-                class="math inline"><em>φ</em> : <em>G</em> → <em>A</em><sub>5</sub></span>.
-                Sendo duais, o icosaedro compartilha este mesmo grupo <span
-                class="math inline"><em>A</em><sub>5</sub></span>.</p>
-                <h2 id="classificação-de-grupos-de-ordem-4">Classificação de Grupos de
-                Ordem 4</h2>
-                <p>Para um grupo de ordem 4, o Teorema de Lagrange indica que seus
-                elementos podem ter ordem 1, 2 ou 4. Se todo elemento não identidade de
-                um grupo <span class="math inline"><em>G</em></span> tem ordem 2, então
-                <span class="math inline"><em>G</em></span> é o grupo de Klein <span
-                class="math inline"><em>V</em><sub>4</sub></span>, que é isomorfo ao
-                grupo diedral <span
-                class="math inline"><em>D</em><sub>2</sub></span>.</p>
+        <div id="page-home" class="page active math-content">
+            <h1 class="text-primary display-5">Classes de grupos e exemplos notáveis</h1>
+            
+            <h2>O Grupo Simétrico $S_n$</h2>
+            <p>O grupo $S_n$ é um grupo de permutações de elementos. Mais precisamente, seja $A$ um conjunto finito $\{1, 2, \dots, n\}$. Se tomarmos todas as funções bijetoras de $A$ em $A$, o que elas fazem é permutar os elementos. A composição de uma função bijetora é ainda uma função bijetora. O número de bijeções de $n$ elementos é $n!$.</p>
+            
+            <p>Com essas operações temos um grupo que é chamado de grupo das permutações, ou ainda grupo simétrico $S_n$. $S_n$ tem $n!$ elementos, onde $n! = n(n-1)(n-2)\dots(3)(2)(1)$.</p>
+            
+            <p>O grupo $S_n$ possui um teorema importante, o Teorema de Cayley, que afirma que, se $G$ é um grupo, então $G$ é isomorfo a um subgrupo de $S_G$. Além desse teorema, temos que, se $G$ é um grupo finito de ordem $n$, então $G$ é isomorfo a um subgrupo de $S_n$.</p>
+            
+            <p>O grupo $S_n$ pode ser obtido fazendo todas as possíveis combinações com os elementos $(1\,2)$ e $(1\,2\,\dots\,n)$. Resumidamente é o que diz o corolário a seguir:</p>
+            
+            <div class="alert alert-light border">
+                <p><strong>Corolário:</strong> Os ciclos $(1\,2)$ e $(1\,2\,\dots\,n)$ geram o grupo $S_n$.</p>
+                <p class="demonstracao">Demonstração: Seja $t = (1\,2)$ e $a = (1\,2\,\dots\,n)$, e seja $G = \langle a, t \rangle$ o grupo gerado por $a$ e $t$. Primeiro, mostramos que $G$ contém todas as transposições adjacentes. Através da conjugação de $t$ por potências de $a$, obtemos:</p>
+                $$a t a^{-1} = (2\,3)$$
+                $$a^2 t a^{-2} = a(2\,3)a^{-1} = (3\,4)$$
+                <p class="demonstracao">e, em geral, para $k = 1, 2, \dots, n-2$,</p>
+                $$a^k t a^{-k} = (k+1, k+2).$$
+                <p class="demonstracao">Assim, $G$ contém as transposições $(2,3), (3,4), \dots, (n-1, n)$. Como $G$ já contém $t=(1,2)$, concluímos que $G$ contém todas as transposições adjacentes. Pode ser provado que o conjunto de transposições adjacentes geram $S_n$, e todas elas pertencem a $G$, segue que $G$ deve ser o próprio $S_n$. $\blacksquare$</p>
             </div>
+
+            <h2>O Grupo Alternado $A_n$</h2>
+            <p>O grupo alternado, denotado por $A_n$, é subgrupo do grupo simétrico $S_n$ do conjunto $\{1,2,3,\dots,n\}$ que contém as permutações de ordem par. Uma permutação par é uma permutação que, quando escrita como um produto de transposições, usa um número par de transposições. Pode ser provado que este número par é uma invariante.</p>
+            
+            <div class="alert alert-light border">
+                <p><strong>Teorema:</strong> As permutações pares em $S_n$ formam um subgrupo de ordem $n!/2$, chamado de grupo alternado $A_n$ de grau $n$.</p>
+            </div>
+            
+            <div class="alert alert-light border">
+                <p><strong>Teorema:</strong> Para $n \geq 3$, os $3-$ciclos geram o $A_n$.</p>
+                <p class="demonstracao">Demonstração: Cada $3-$ciclos é uma permutação par, dado um elemento de $A_n$ usamos o corolário para escrever como um produto de pares de transposição da forma $(1a)$. Tome essas transposições em pares adjacentes e combine esses pares usando $(1a)(1b)=(1ba)$. Nosso elemento é agora um produto de $3-$ciclos. $\blacksquare$</p>
+            </div>
+
+            <h2>O Grupo Diedral $D_n$</h2>
+            <p>Também temos o grupo diedral $D_n$, grupo não abeliano das simetrias de um polígono regular de $n$ lados. Por exemplo, se $n=3$ temos um triângulo, que tem um total de seis rotações simétricas, sendo três rotações ($r$) e três reflexões ($s$). Temos então: $D_3 = \{e,r,r^2,s,rs,r^2s\}$.</p>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped text-center align-middle" style="max-width: 600px; margin: 2rem auto;">
+                    <thead class="table-dark">
+                        <tr>
+                            <th></th>
+                            <th>$e$</th>
+                            <th>$r$</th>
+                            <th>$r^2$</th>
+                            <th>$s$</th>
+                            <th>$rs$</th>
+                            <th>$r^2s$</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><th>$e$</th>   <td>$e$</td>   <td>$r$</td>   <td>$r^2$</td> <td>$s$</td>   <td>$rs$</td>  <td>$r^2s$</td></tr>
+                        <tr><th>$r$</th>   <td>$r$</td>   <td>$r^2$</td> <td>$e$</td>   <td>$rs$</td>  <td>$r^2s$</td><td>$s$</td></tr>
+                        <tr><th>$r^2$</th> <td>$r^2$</td> <td>$e$</td>   <td>$r$</td>   <td>$r^2s$</td><td>$s$</td>   <td>$rs$</td></tr>
+                        <tr><th>$s$</th>   <td>$s$</td>   <td>$r^2s$</td><td>$rs$</td>  <td>$e$</td>   <td>$r^2$</td> <td>$r$</td></tr>
+                        <tr><th>$rs$</th>  <td>$rs$</td>  <td>$s$</td>   <td>$r^2s$</td><td>$r$</td>   <td>$e$</td>   <td>$r^2$</td></tr>
+                        <tr><th>$r^2s$</th><td>$r^2s$</td><td>$rs$</td>  <td>$s$</td>   <td>$r^2$</td> <td>$r$</td>   <td>$e$</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-center text-muted mb-5"><em>Tabela: Tabela do grupo $D_3$</em></p>
+
+            <h2>Grupos Ortogonais $O_n$ e $SO_n$</h2>
+            <p>Uma matriz $A_{n \times n}$ é ortogonal se satisfaz:</p>
+            $$A^t A = I,$$
+            <p>onde $I$ é a matriz identidade e $A^t$ é a matriz transposta de $A$. Isso significa que as colunas de $A$ formam uma base ortonormal de $\mathbb{R}^n$. O mesmo vale para as linhas. Como $\det(A^t A) = (\det A)^2$, o determinante de uma matriz ortogonal é sempre $\pm 1$.</p>
+            
+            <p>O conjunto de todas as matrizes ortogonais $n \times n$ formam um subgrupo do grupo linear geral, denotado por $GL_n(\mathbb{R})$. Esse subgrupo é chamado de grupo ortogonal $O_n$. O subconjunto de $O_n$ formado pelas matrizes com determinante igual a $1$ é chamado de grupo ortogonal especial $SO_n$.</p>
+            
+            <div class="alert alert-light border">
+                <p><strong>Proposição:</strong> Seja $A \in O_n$ e $f_A : \mathbb{R}^n \to \mathbb{R}^n$ a transformação linear dada por $f_A(x) = Ax$. Então $f_A$ é uma isometria, isto é,</p>
+                $$||f_A(x) - f_A(y)|| = ||x-y||, \quad \forall x,y \in \mathbb{R}^n.$$
+                <p class="demonstracao">Demonstração: Calculando $||f_A(x)||^2$, temos:</p>
+                $$||f_A(x)||^2 = f_A(x)\cdot f_A(x) = (Ax)^t(Ax) = x^tA^tAx = x^tx = ||x||^2 \Rightarrow ||f_A(x)|| = ||x||$$
+                <p class="demonstracao">Logo seu comprimento é preservado. Também, $||f_A(x) - f_A(y)|| = ||f_A(x-y)|| = ||x-y||$, mostra que $f_A$ preserva a distância entre dois pontos. Note que a ortogonalidade também é preservada. $\blacksquare$</p>
+            </div>
+
+            <div class="alert alert-light border">
+                <p><strong>Teorema:</strong> Seja $A \in SO_3$. Então $A$ é uma rotação em $\mathbb{R}^3$ em torno de um eixo que passa pela origem, isto é, existe um vetor $v \in \mathbb{R}^3 \setminus \{0\}$ tal que $Av = v$ e a restrição de $A$ ao plano ortogonal a $v$ é uma rotação plana.</p>
+                <p class="demonstracao">Demonstração: Seja $A \in SO_3$. Como $A \in O_3$, temos que $A^T A = I$, ou seja, $A$ é uma matriz ortogonal. O polinômio característico de $A$, pelo Teorema Fundamental da Álgebra, possui pelo menos uma raiz real. Como $A \in SO_3$, então $\det A = \lambda_1 \lambda_2 \lambda_3 = 1$. O autovalor real é necessariamente $\lambda_1 = 1$. Seja $v \in \mathbb{R}^3$ um autovetor associado ao autovalor $1$, então $Av = v$. Na base $\{v, v_1, v_2\}$, a matriz $A$ representa uma rotação plana de $SO_2$ sobre o plano ortogonal. Assim, toda matriz de $SO_3$ representa uma rotação em $\mathbb{R}^3$ em torno de um eixo que passa pela origem. $\blacksquare$</p>
+            </div>
+
+            <h2>Grupos de Simetria dos Sólidos Platônicos</h2>
+            <p>Existem exatamente cinco sólidos platônicos no espaço euclidiano tridimensional. Seus grupos de simetria atuam de forma transitiva sobre vértices, arestas e faces.</p>
+            
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered text-center align-middle mt-4">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Sólido Platônico</th>
+                            <th>Vértices (V)</th>
+                            <th>Arestas (A)</th>
+                            <th>Faces (F)</th>
+                            <th>Forma da Face</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Tetraedro</td><td>4</td><td>6</td><td>4</td><td>Triângulo equilátero</td></tr>
+                        <tr><td>Cubo</td><td>8</td><td>12</td><td>6</td><td>Quadrado</td></tr>
+                        <tr><td>Octaedro</td><td>6</td><td>12</td><td>8</td><td>Triângulo equilátero</td></tr>
+                        <tr><td>Dodecaedro</td><td>20</td><td>30</td><td>12</td><td>Pentágono regular</td></tr>
+                        <tr><td>Icosaedro</td><td>12</td><td>30</td><td>20</td><td>Triângulo equilátero</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-center text-muted mb-5"><em>Tabela: Características dos Sólidos Platônicos</em></p>
+
+            <p><strong>Definição (Sólidos Duais):</strong> O poliedro dual de um sólido regular é outro poliedro que pode ser construído conectando os centros de cada face do sólido original, inscrevendo este novo poliedro dual dentro do original.</p>
+
+            <div class="alert alert-light border">
+                <p><strong>Lema:</strong> Se dois sólidos são duais, então eles possuem o mesmo grupo de simetria.</p>
+                <p class="demonstracao">Demonstração: Seja $g$ uma simetria (isometria) que mapeia o poliedro $P$ em si mesmo. Tal transformação $g$ permuta as faces de $P$, e portanto também os seus centros, que correspondem aos vértices de $P^*$. Portanto, toda simetria de $P$ é também uma simetria de $P^*$. Como o dual do dual é o poliedro original, ambos compartilham exatamente o mesmo grupo. $\blacksquare$</p>
+            </div>
+
+            <h3>Tetraedro</h3>
+            <p>Existem 12 simetrias de rotação para o tetraedro regular. O conjunto dessas simetrias forma um grupo isomorfo ao grupo alternado $A_4$. Definimos o homomorfismo $\varphi: G \to S_4$, associando cada rotação a uma permutação dos vértices $\{1, 2, 3, 4\}$.</p>
+
+            <h3>Cubo e Octaedro</h3>
+            <p>O cubo tem 24 simetrias rotacionais. Numerando as 4 diagonais principais do cubo, podemos associar cada rotação a uma permutação dessas diagonais, gerando um homomorfismo $\varphi: G \rightarrow S_4$. Como o cubo e o octaedro são duais, ambos compartilham o mesmo grupo de rotações $S_4$.</p>
+
+            <h3>Dodecaedro e Icosaedro</h3>
+            <p>O dodecaedro possui 60 simetrias rotacionais (24 de faces, 20 de vértices, 15 de arestas, mais a identidade). Inscrevendo cinco cubos no interior do dodecaedro, cada rotação permuta esses cinco cubos. Isso nos dá o isomorfismo $\varphi: G \to A_5$. Sendo duais, o icosaedro compartilha este mesmo grupo $A_5$.</p>
+
+            <h2>Classificação de Grupos de Ordem 4</h2>
+            <p>Para um grupo de ordem 4, o Teorema de Lagrange indica que seus elementos podem ter ordem 1, 2 ou 4. Se todo elemento não identidade de um grupo $G$ tem ordem 2, então $G$ é o grupo de Klein $V_4$, que é isomorfo ao grupo diedral $D_2$.</p>
+            
+            <br><br>
         </div>
 
         <div id="page-tetraedro" class="page">
@@ -514,7 +265,7 @@
 
     <script>
         // ==========================================
-        // 0. FUNÇÃO MATEMÁTICA COMPARTILHADA (Tradução exata do NumPy)
+        // 0. FUNÇÃO MATEMÁTICA COMPARTILHADA
         // ==========================================
         const MathUtils = {
             add: (a, b) => [a[0]+b[0], a[1]+b[1], a[2]+b[2]],
@@ -661,13 +412,13 @@
         }
 
         // ==========================================
-        // dcc.Store EQUIVALENTE (memory-state)
+        // memory-state
         // ==========================================
         let memory_state_tet = { vertices: [...vertices_init_tet], p1: 'Vértice 1', p2: 'Centro C(2,3,4)' };
         let memory_state_cub = { vertices: [...vertices_init_cub], p1: 'Centro Face (1,2,3,4)', p2: "Centro Face (1',2',3',4')" };
 
         // ==========================================
-        // 7. CALLBACKS E PLOTAGEM
+        // CALLBACKS E PLOTAGEM
         // ==========================================
         const plotlyConfig = { displayModeBar: false }; 
 
@@ -690,31 +441,21 @@
 
             let traces = [];
             
-            // --- SÓLIDO FIXO (CINZA CLARO) ---
             traces.push({ type: 'mesh3d', x: vertices_init_tet.map(p=>p[0]), y: vertices_init_tet.map(p=>p[1]), z: vertices_init_tet.map(p=>p[2]), i: faces_idx.i, j: faces_idx.j, k: faces_idx.k, color: 'lightgray', opacity: 0.15, showscale: false, hoverinfo: 'none' });
             
-            // Arestas Fixo
             let fixSolid = agrupar_arestas(vertices_init_tet, solid_edges);
             let fixDotted = agrupar_arestas(vertices_init_tet, dotted_edges);
             traces.push({ type: 'scatter3d', mode: 'lines', x: fixSolid.x_edges, y: fixSolid.y_edges, z: fixSolid.z_edges, line: {color: 'gray', width: 2}, hoverinfo: 'none' });
             traces.push({ type: 'scatter3d', mode: 'lines', x: fixDotted.x_edges, y: fixDotted.y_edges, z: fixDotted.z_edges, line: {color: 'gray', width: 2, dash: 'dot'}, hoverinfo: 'none' });
-            
-            // Labels Fixo
             traces.push({ type: 'scatter3d', mode: 'text', x: vertices_init_tet.map(p=>p[0]+0.03), y: vertices_init_tet.map(p=>p[1]), z: vertices_init_tet.map(p=>p[2]), text: labels_fixo_tet, textfont: {color: 'gray', size: 12}, marker: {size: 4, color: 'gray'}, hoverinfo: 'none' });
 
-            // --- SÓLIDO MÓVEL (VERMELHO) ---
             traces.push({ type: 'mesh3d', x: pts_movel.map(p=>p[0]), y: pts_movel.map(p=>p[1]), z: pts_movel.map(p=>p[2]), i: faces_idx.i, j: faces_idx.j, k: faces_idx.k, color: 'firebrick', opacity: 0.4, showscale: false, hoverinfo: 'none' });
-            
-            // Arestas Móvel
             let movSolid = agrupar_arestas(pts_movel, solid_edges);
             let movDotted = agrupar_arestas(pts_movel, dotted_edges);
             traces.push({ type: 'scatter3d', mode: 'lines', x: movSolid.x_edges, y: movSolid.y_edges, z: movSolid.z_edges, line: {color: 'black', width: 3}, hoverinfo: 'none' });
             traces.push({ type: 'scatter3d', mode: 'lines', x: movDotted.x_edges, y: movDotted.y_edges, z: movDotted.z_edges, line: {color: 'black', width: 3, dash: 'dot'}, hoverinfo: 'none' });
-            
-            // Labels Móvel
             traces.push({ type: 'scatter3d', mode: 'text', x: pts_movel.map(p=>p[0]-0.05), y: pts_movel.map(p=>p[1]), z: pts_movel.map(p=>p[2]), text: labels_movel_tet, textfont: {color: 'black', size: 16}, marker: {size: 6, color: 'black'}, hoverinfo: 'none' });
 
-            // --- EIXO DE ROTAÇÃO ---
             if (!MathUtils.allclose(start_curr, end_curr)) {
                 let vec = MathUtils.mul(MathUtils.sub(end_curr, start_curr), 1/MathUtils.norm(MathUtils.sub(end_curr, start_curr)));
                 traces.push({ type: 'scatter3d', mode: 'lines', x: [start_curr[0]-vec[0]*0.8, end_curr[0]+vec[0]*0.8], y: [start_curr[1]-vec[1]*0.8, end_curr[1]+vec[1]*0.8], z: [start_curr[2]-vec[2]*0.8, end_curr[2]+vec[2]*0.8], line: {color: 'black', width: 4, dash: 'solid'}, hoverinfo: 'none' });
@@ -740,7 +481,6 @@
 
             let traces = [];
             
-            // Fixo
             traces.push({ type: 'mesh3d', x: vertices_init_cub.map(p=>p[0]), y: vertices_init_cub.map(p=>p[1]), z: vertices_init_cub.map(p=>p[2]), i: faces_dict_cub.i, j: faces_dict_cub.j, k: faces_dict_cub.k, color: 'lightgray', opacity: 0.1, showscale: false, hoverinfo: 'none' });
             let fixSolid = agrupar_arestas(vertices_init_cub, solid_edges_idx_cub);
             let fixDotted = agrupar_arestas(vertices_init_cub, dotted_edges_idx_cub);
@@ -748,7 +488,6 @@
             traces.push({ type: 'scatter3d', mode: 'lines', x: fixDotted.x_edges, y: fixDotted.y_edges, z: fixDotted.z_edges, line: {color: 'gray', width: 2, dash: 'dot'}, hoverinfo: 'none' });
             traces.push({ type: 'scatter3d', mode: 'text', x: vertices_init_cub.map(p=>p[0]+0.15), y: vertices_init_cub.map(p=>p[1]), z: vertices_init_cub.map(p=>p[2]-0.25), text: labels_fixo_cub, textfont: {color: 'gray', size: 12}, hoverinfo: 'none' });
 
-            // Móvel
             traces.push({ type: 'mesh3d', x: pts_movel.map(p=>p[0]), y: pts_movel.map(p=>p[1]), z: pts_movel.map(p=>p[2]), i: faces_dict_cub.i, j: faces_dict_cub.j, k: faces_dict_cub.k, color: 'firebrick', opacity: 0.3, showscale: false, hoverinfo: 'none' });
             let movSolid = agrupar_arestas(pts_movel, solid_edges_idx_cub);
             let movDotted = agrupar_arestas(pts_movel, dotted_edges_idx_cub);
@@ -756,7 +495,6 @@
             traces.push({ type: 'scatter3d', mode: 'lines', x: movDotted.x_edges, y: movDotted.y_edges, z: movDotted.z_edges, line: {color: 'black', width: 3, dash: 'dot'}, hoverinfo: 'none' });
             traces.push({ type: 'scatter3d', mode: 'text', x: pts_movel.map(p=>p[0]), y: pts_movel.map(p=>p[1]), z: pts_movel.map(p=>p[2]), text: labels_movel_cub, textfont: {color: 'black', size: 16}, hoverinfo: 'none' });
 
-            // Eixo
             if (!MathUtils.allclose(start_curr, end_curr)) {
                 let vec = MathUtils.mul(MathUtils.sub(end_curr, start_curr), 1/MathUtils.norm(MathUtils.sub(end_curr, start_curr)));
                 traces.push({ type: 'scatter3d', mode: 'lines', x: [start_curr[0]-vec[0]*1.0, end_curr[0]+vec[0]*1.0], y: [start_curr[1]-vec[1]*1.0, end_curr[1]+vec[1]*1.0], z: [start_curr[2]-vec[2]*1.0, end_curr[2]+vec[2]*1.0], line: {color: 'black', width: 4, dash: 'solid'}, hoverinfo: 'none' });
@@ -828,7 +566,6 @@
         }
 
         window.onload = function() {
-            // Dropdowns Tetraedro
             populate_dropdowns(['dropdown-p1-tet'], get_pontos_tet(vertices_init_tet), memory_state_tet.p1);
             populate_dropdowns(['dropdown-p2-tet'], get_pontos_tet(vertices_init_tet), memory_state_tet.p2);
             document.getElementById('dropdown-p1-tet').addEventListener('change', trigger_change_tet);
@@ -840,7 +577,6 @@
                 update_tetraedro();
             });
 
-            // Dropdowns Cubo
             populate_dropdowns(['dropdown-p1-cub'], get_pontos_cub(vertices_init_cub), memory_state_cub.p1);
             populate_dropdowns(['dropdown-p2-cub'], get_pontos_cub(vertices_init_cub), memory_state_cub.p2);
             document.getElementById('dropdown-p1-cub').addEventListener('change', trigger_change_cub);
