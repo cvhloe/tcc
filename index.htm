@@ -141,7 +141,6 @@
             allclose: (a, b) => MathUtils.norm(MathUtils.sub(a, b)) < 1e-5
         };
 
-        // Transposição de Matriz 3x3
         function transpose(M) {
             return [
                 [M[0][0], M[1][0], M[2][0]],
@@ -150,7 +149,6 @@
             ];
         }
 
-        // Multiplicação de vetor 1x3 por Matriz 3x3 (v @ M)
         function vecMatMul(v, M) {
             return [
                 v[0]*M[0][0] + v[1]*M[1][0] + v[2]*M[2][0],
@@ -168,14 +166,12 @@
             let n = MathUtils.norm(diff);
             let axis = MathUtils.mul(diff, 1/n);
             
-            // K = np.array([[0, -axis[2], axis[1]], [axis[2], 0, -axis[0]], [-axis[1], axis[0], 0]])
             let K = [
                 [0, -axis[2], axis[1]],
                 [axis[2], 0, -axis[0]],
                 [-axis[1], axis[0], 0]
             ];
 
-            // K @ K
             let K2 = [
                 [-axis[1]*axis[1] - axis[2]*axis[2], axis[0]*axis[1], axis[0]*axis[2]],
                 [axis[0]*axis[1], -axis[0]*axis[0] - axis[2]*axis[2], axis[1]*axis[2]],
@@ -185,7 +181,6 @@
             let sinA = Math.sin(-angle);
             let cosA = 1 - Math.cos(-angle);
 
-            // R_mat = np.eye(3) + np.sin(-angle) * K + (1 - np.cos(-angle)) * (K @ K)
             let R_mat = [
                 [1 + sinA*K[0][0] + cosA*K2[0][0], sinA*K[0][1] + cosA*K2[0][1], sinA*K[0][2] + cosA*K2[0][2]],
                 [sinA*K[1][0] + cosA*K2[1][0], 1 + sinA*K[1][1] + cosA*K2[1][1], sinA*K[1][2] + cosA*K2[1][2]],
@@ -194,7 +189,6 @@
 
             let R_mat_T = transpose(R_mat);
 
-            // return (pts - start) @ R_mat.T + start
             return pts.map(p => {
                 let p_shifted = MathUtils.sub(p, start);
                 let p_rot = vecMatMul(p_shifted, R_mat_T);
@@ -288,7 +282,7 @@
         // ==========================================
         // 7. CALLBACKS E PLOTAGEM
         // ==========================================
-        const plotlyConfig = { displayModeBar: false }; // Exatamente igual config={'displayModeBar': False}
+        const plotlyConfig = { displayModeBar: false }; 
 
         function update_tetraedro() {
             let p1_name = document.getElementById('dropdown-p1-tet').value;
@@ -309,26 +303,31 @@
 
             let traces = [];
             
-            // Fixo
-            let fix = agrupar_arestas(vertices_init_tet, []); // helper variables
+            // --- SÓLIDO FIXO (CINZA CLARO) ---
             traces.push({ type: 'mesh3d', x: vertices_init_tet.map(p=>p[0]), y: vertices_init_tet.map(p=>p[1]), z: vertices_init_tet.map(p=>p[2]), i: faces_idx.i, j: faces_idx.j, k: faces_idx.k, color: 'lightgray', opacity: 0.15, showscale: false, hoverinfo: 'none' });
             
-            let x_solid_fix = agrupar_arestas(vertices_init_tet, solid_edges);
-            // The original python code doesn't plot fixed solid edges for Tet, but plots movel ones.
-            // Oh wait, looking at python: it ONLY plotted solid/dotted for pts_movel (Wait, no, you added "CÓDIGO NOVO" in python)
-            let x_solid = agrupar_arestas(pts_movel, solid_edges);
-            traces.push({ type: 'scatter3d', mode: 'lines', x: x_solid.x_edges, y: x_solid.y_edges, z: x_solid.z_edges, line: {color: 'black', width: 3}, hoverinfo: 'none' });
-
-            let x_dotted = agrupar_arestas(pts_movel, dotted_edges);
-            traces.push({ type: 'scatter3d', mode: 'lines', x: x_dotted.x_edges, y: x_dotted.y_edges, z: x_dotted.z_edges, line: {color: 'black', width: 3, dash: 'dot'}, hoverinfo: 'none' });
+            // Arestas Fixo
+            let fixSolid = agrupar_arestas(vertices_init_tet, solid_edges);
+            let fixDotted = agrupar_arestas(vertices_init_tet, dotted_edges);
+            traces.push({ type: 'scatter3d', mode: 'lines', x: fixSolid.x_edges, y: fixSolid.y_edges, z: fixSolid.z_edges, line: {color: 'gray', width: 2}, hoverinfo: 'none' });
+            traces.push({ type: 'scatter3d', mode: 'lines', x: fixDotted.x_edges, y: fixDotted.y_edges, z: fixDotted.z_edges, line: {color: 'gray', width: 2, dash: 'dot'}, hoverinfo: 'none' });
             
+            // Labels Fixo
             traces.push({ type: 'scatter3d', mode: 'text', x: vertices_init_tet.map(p=>p[0]+0.03), y: vertices_init_tet.map(p=>p[1]), z: vertices_init_tet.map(p=>p[2]), text: labels_fixo_tet, textfont: {color: 'gray', size: 12}, marker: {size: 4, color: 'gray'}, hoverinfo: 'none' });
 
-            // Móvel
+            // --- SÓLIDO MÓVEL (VERMELHO) ---
             traces.push({ type: 'mesh3d', x: pts_movel.map(p=>p[0]), y: pts_movel.map(p=>p[1]), z: pts_movel.map(p=>p[2]), i: faces_idx.i, j: faces_idx.j, k: faces_idx.k, color: 'firebrick', opacity: 0.4, showscale: false, hoverinfo: 'none' });
+            
+            // Arestas Móvel
+            let movSolid = agrupar_arestas(pts_movel, solid_edges);
+            let movDotted = agrupar_arestas(pts_movel, dotted_edges);
+            traces.push({ type: 'scatter3d', mode: 'lines', x: movSolid.x_edges, y: movSolid.y_edges, z: movSolid.z_edges, line: {color: 'black', width: 3}, hoverinfo: 'none' });
+            traces.push({ type: 'scatter3d', mode: 'lines', x: movDotted.x_edges, y: movDotted.y_edges, z: movDotted.z_edges, line: {color: 'black', width: 3, dash: 'dot'}, hoverinfo: 'none' });
+            
+            // Labels Móvel
             traces.push({ type: 'scatter3d', mode: 'text', x: pts_movel.map(p=>p[0]-0.05), y: pts_movel.map(p=>p[1]), z: pts_movel.map(p=>p[2]), text: labels_movel_tet, textfont: {color: 'black', size: 16}, marker: {size: 6, color: 'black'}, hoverinfo: 'none' });
 
-            // Eixo
+            // --- EIXO DE ROTAÇÃO ---
             if (!MathUtils.allclose(start_curr, end_curr)) {
                 let vec = MathUtils.mul(MathUtils.sub(end_curr, start_curr), 1/MathUtils.norm(MathUtils.sub(end_curr, start_curr)));
                 traces.push({ type: 'scatter3d', mode: 'lines', x: [start_curr[0]-vec[0]*0.8, end_curr[0]+vec[0]*0.8], y: [start_curr[1]-vec[1]*0.8, end_curr[1]+vec[1]*0.8], z: [start_curr[2]-vec[2]*0.8, end_curr[2]+vec[2]*0.8], line: {color: 'black', width: 4, dash: 'solid'}, hoverinfo: 'none' });
@@ -398,7 +397,6 @@
         }
 
         function trigger_change_tet(e) {
-            // Emula o ctx.triggered_id in ['dropdown-p1-tet', 'dropdown-p2-tet']
             let p1_name = document.getElementById('dropdown-p1-tet').value;
             let p2_name = document.getElementById('dropdown-p2-tet').value;
             let angulo_graus = parseFloat(document.getElementById('slider-angulo-tet').value);
