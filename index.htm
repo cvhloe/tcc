@@ -4,85 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simetrias dos Sólidos de Platão</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.0/dist/flatly/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <style>
-        body { margin: 0; padding: 0; }
+        body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
         
-        /* SIDEBAR_STYLE idêntico ao Python */
+        /* Estilos do Menu Lateral */
         .sidebar {
-            position: fixed; top: 0; left: 0; bottom: 0;
-            width: 18rem; padding: 2rem 1rem;
-            background-color: #2c3e50; color: white;
+            position: fixed; top: 0; left: 0; bottom: 0; width: 18rem;
+            padding: 2rem 1rem; background-color: #2c3e50; color: white;
         }
-        /* Estilos do dbc.Nav pills do Dash */
-        .sidebar .nav-pills .nav-link { color: #e0e2e2; margin-bottom: 2px; border-radius: 0.25rem; cursor: pointer;}
-        .sidebar .nav-pills .nav-link.active { background-color: #18bc9c; color: white; } /* Cor primary do Flatly */
-
-        /* CONTENT_STYLE idêntico ao Python */
-        .content {
-            margin-left: 20rem; margin-right: 2rem; padding: 2rem 1rem;
-        }
-
+        .sidebar hr { border-color: white; }
+        .nav-pills .nav-link { color: #e0e2e2; cursor: pointer; margin-bottom: 5px; }
+        .nav-pills .nav-link.active { background-color: #0d6efd; color: white; }
+        
+        /* Estilos do Conteúdo */
+        .content { margin-left: 20rem; margin-right: 2rem; padding: 2rem 1rem; }
         .page { display: none; }
         .page.active { display: block; }
-        
-        /* Layout Flex idêntico ao Python */
-        .solid-container { display: flex; height: 75vh; }
-        .control-panel { 
-            width: 30%; padding: 20px; border-right: 1px solid #ccc; 
-            background-color: #f9f9f9; border-radius: 10px; 
+
+        /* Controles */
+        .controls-panel {
+            width: 30%; padding: 20px; border-right: 1px solid #ccc;
+            background-color: #f9f9f9; border-radius: 10px;
         }
         .graph-panel { width: 70%; height: 100%; }
-        
-        /* Emulando os marks do dcc.Slider */
-        .slider-marks { display: flex; justify-content: space-between; font-size: 12px; color: #7b8a8b; margin-top: -5px; }
+        .slider-container { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+        select, input[type=range] { width: 100%; margin-bottom: 20px; padding: 5px; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <h4 class="display-6" style="color: white;">Simetrias dos Sólidos de Platão</h4>
-        <hr style="border-color: white;">
-        <nav class="nav nav-pills flex-column">
-            <a class="nav-link active" onclick="navigate('/', this)">Fundamentos e Teoremas</a>
-            <a class="nav-link" onclick="navigate('/tetraedro', this)">O Tetraedro (A4)</a>
-            <a class="nav-link" onclick="navigate('/cubo', this)">Cubo e Octaedro (S4)</a>
-            <a class="nav-link" onclick="navigate('/dodecaedro', this)">Dodecaedro e Icosaedro</a>
-        </nav>
+        <h4 class="display-6" style="color: white; font-size: 1.5rem;">Simetrias dos Sólidos de Platão</h4>
+        <hr>
+        <ul class="nav nav-pills flex-column">
+            <li class="nav-item"><a class="nav-link active" onclick="navigate('home', this)">Fundamentos e Teoremas</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="navigate('tetraedro', this)">O Tetraedro (A4)</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="navigate('cubo', this)">Cubo e Octaedro (S4)</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="navigate('dodecaedro', this)">Dodecaedro e Icosaedro</a></li>
+        </ul>
     </div>
 
-    <div id="page-content" class="content">
-        
-        <div id="page-home" class="page active">
+    <div class="content">
+        <div id="home" class="page active">
             <h1 class="text-primary">Classes de grupos e exemplos notáveis</h1>
             <hr>
             <div style="font-size: 18px; line-height: 1.8;">
-                Texto do Capítulo 2 será lido aqui (Crie o arquivo cap2.md).
+                <p><i>Texto do Capítulo 2 será lido aqui (Substitua este texto no HTML pelo conteúdo do seu cap2.md).</i></p>
             </div>
         </div>
 
-        <div id="page-tetraedro" class="page">
+        <div id="tetraedro" class="page">
             <h1 class="text-primary">Simetrias do Tetraedro</h1>
             <hr>
-            <div class="solid-container">
-                <div class="control-panel">
+            <div style="display: flex; height: 75vh;">
+                <div class="controls-panel">
                     <h4>Controles do Sólido</h4>
                     <p style="color: gray; font-size: 14px;">Mova o sólido com o botão esquerdo do mouse</p>
                     
-                    <label class="form-label mt-3">Eixo de Rotação (Ponto 1):</label>
-                    <select id="dropdown-p1-tet" class="form-select mb-3"></select>
-                    
-                    <label class="form-label">Eixo de Rotação (Ponto 2):</label>
-                    <select id="dropdown-p2-tet" class="form-select mb-3"></select>
-                    
-                    <label class="form-label">Ângulo de Rotação Atual (α):</label>
-                    <input type="range" class="form-range" id="slider-angulo-tet" min="0" max="360" step="1" value="0">
-                    <div class="slider-marks">
+                    <label>Eixo de Rotação (Ponto 1):</label>
+                    <select id="dropdown-p1-tet"></select>
+
+                    <label>Eixo de Rotação (Ponto 2):</label>
+                    <select id="dropdown-p2-tet"></select>
+
+                    <label>Ângulo de Rotação Atual (α): <span id="val-angulo-tet">0°</span></label>
+                    <input type="range" id="slider-angulo-tet" min="0" max="360" step="1" value="0">
+                    <div style="display: flex; justify-content: space-between; font-size: 12px; color: gray;">
                         <span>0°</span><span>90°</span><span>120°</span><span>180°</span><span>240°</span><span>360°</span>
                     </div>
-                    
-                    <button id="btn-reset-tet" class="btn btn-secondary w-100" style="margin-top: 40px;">Resetar Posição Original</button>
+
+                    <button id="btn-reset-tet" class="btn btn-secondary" style="margin-top: 40px; width: 100%;">Resetar Posição Original</button>
                 </div>
                 <div class="graph-panel">
                     <div id="grafico-tetraedro" style="height: 100%;"></div>
@@ -90,27 +83,27 @@
             </div>
         </div>
 
-        <div id="page-cubo" class="page">
+        <div id="cubo" class="page">
             <h1 class="text-primary">Simetrias do Cubo e Octaedro</h1>
             <hr>
-            <div class="solid-container">
-                <div class="control-panel">
+            <div style="display: flex; height: 75vh;">
+                <div class="controls-panel">
                     <h4>Controles do Sólido</h4>
                     <p style="color: gray; font-size: 14px;">Mova o sólido com o botão esquerdo do mouse</p>
                     
-                    <label class="form-label mt-3">Eixo de Rotação (Ponto 1):</label>
-                    <select id="dropdown-p1-cub" class="form-select mb-3"></select>
-                    
-                    <label class="form-label">Eixo de Rotação (Ponto 2):</label>
-                    <select id="dropdown-p2-cub" class="form-select mb-3"></select>
-                    
-                    <label class="form-label">Ângulo de Rotação Atual (α):</label>
-                    <input type="range" class="form-range" id="slider-angulo-cub" min="0" max="360" step="1" value="0">
-                    <div class="slider-marks">
+                    <label>Eixo de Rotação (Ponto 1):</label>
+                    <select id="dropdown-p1-cub"></select>
+
+                    <label>Eixo de Rotação (Ponto 2):</label>
+                    <select id="dropdown-p2-cub"></select>
+
+                    <label>Ângulo de Rotação Atual (α): <span id="val-angulo-cub">0°</span></label>
+                    <input type="range" id="slider-angulo-cub" min="0" max="360" step="1" value="0">
+                    <div style="display: flex; justify-content: space-between; font-size: 12px; color: gray;">
                         <span>0°</span><span>90°</span><span>120°</span><span>180°</span><span>270°</span><span>360°</span>
                     </div>
-                    
-                    <button id="btn-reset-cub" class="btn btn-secondary w-100" style="margin-top: 40px;">Resetar Posição Original</button>
+
+                    <button id="btn-reset-cub" class="btn btn-secondary" style="margin-top: 40px; width: 100%;">Resetar Posição Original</button>
                 </div>
                 <div class="graph-panel">
                     <div id="grafico-cubo" style="height: 100%;"></div>
@@ -118,7 +111,7 @@
             </div>
         </div>
 
-        <div id="page-dodecaedro" class="page">
+        <div id="dodecaedro" class="page">
             <h1 class="text-primary">Dodecaedro e Icosaedro</h1>
             <hr>
             <h3>Página em Construção...</h3>
@@ -127,89 +120,62 @@
 
     <script>
         // ==========================================
-        // 0. FUNÇÃO MATEMÁTICA COMPARTILHADA (Tradução exata do NumPy)
+        // 0. FUNÇÕES MATEMÁTICAS COMPARTILHADAS
         // ==========================================
         const MathUtils = {
             add: (a, b) => [a[0]+b[0], a[1]+b[1], a[2]+b[2]],
             sub: (a, b) => [a[0]-b[0], a[1]-b[1], a[2]-b[2]],
-            mul: (v, s) => [v[0]*s, v[1]*s, v[2]*s],
+            mult: (v, s) => [v[0]*s, v[1]*s, v[2]*s],
+            dot: (a, b) => a[0]*b[0] + a[1]*b[1] + a[2]*b[2],
+            cross: (a, b) => [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]],
             norm: (v) => Math.sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]),
-            mean: (pts) => {
-                let sum = pts.reduce((acc, p) => [acc[0]+p[0], acc[1]+p[1], acc[2]+p[2]], [0,0,0]);
-                return [sum[0]/pts.length, sum[1]/pts.length, sum[2]/pts.length];
+            mean: (arr) => {
+                let sum = [0,0,0];
+                arr.forEach(v => { sum[0]+=v[0]; sum[1]+=v[1]; sum[2]+=v[2]; });
+                return [sum[0]/arr.length, sum[1]/arr.length, sum[2]/arr.length];
             },
-            allclose: (a, b) => MathUtils.norm(MathUtils.sub(a, b)) < 1e-5
+            allclose: (a, b) => Math.abs(a[0]-b[0])<1e-5 && Math.abs(a[1]-b[1])<1e-5 && Math.abs(a[2]-b[2])<1e-5
         };
 
-        // Transposição de Matriz 3x3
-        function transpose(M) {
-            return [
-                [M[0][0], M[1][0], M[2][0]],
-                [M[0][1], M[1][1], M[2][1]],
-                [M[0][2], M[1][2], M[2][2]]
-            ];
-        }
-
-        // Multiplicação de vetor 1x3 por Matriz 3x3 (v @ M)
-        function vecMatMul(v, M) {
-            return [
-                v[0]*M[0][0] + v[1]*M[1][0] + v[2]*M[2][0],
-                v[0]*M[0][1] + v[1]*M[1][1] + v[2]*M[2][1],
-                v[0]*M[0][2] + v[1]*M[1][2] + v[2]*M[2][2]
-            ];
+        function rotate_point(pt, start, end, angle) {
+            if (MathUtils.allclose(start, end) || angle === 0) return pt;
+            let axis_raw = MathUtils.sub(end, start);
+            let len = MathUtils.norm(axis_raw);
+            let k = MathUtils.mult(axis_raw, 1/len); // unit vector
+            
+            let p = MathUtils.sub(pt, start);
+            let cos_theta = Math.cos(-angle);
+            let sin_theta = Math.sin(-angle);
+            
+            // Rodrigues' rotation formula
+            let term1 = MathUtils.mult(p, cos_theta);
+            let term2 = MathUtils.mult(MathUtils.cross(k, p), sin_theta);
+            let term3 = MathUtils.mult(k, MathUtils.dot(k, p) * (1 - cos_theta));
+            
+            let rot_p = MathUtils.add(MathUtils.add(term1, term2), term3);
+            return MathUtils.add(rot_p, start);
         }
 
         function rotate_points(pts, start, end, angle) {
-            if (MathUtils.allclose(start, end) || angle === 0) {
-                return pts.map(p => [...p]);
-            }
-            
-            let diff = MathUtils.sub(end, start);
-            let n = MathUtils.norm(diff);
-            let axis = MathUtils.mul(diff, 1/n);
-            
-            // K = np.array([[0, -axis[2], axis[1]], [axis[2], 0, -axis[0]], [-axis[1], axis[0], 0]])
-            let K = [
-                [0, -axis[2], axis[1]],
-                [axis[2], 0, -axis[0]],
-                [-axis[1], axis[0], 0]
-            ];
-
-            // K @ K
-            let K2 = [
-                [-axis[1]*axis[1] - axis[2]*axis[2], axis[0]*axis[1], axis[0]*axis[2]],
-                [axis[0]*axis[1], -axis[0]*axis[0] - axis[2]*axis[2], axis[1]*axis[2]],
-                [axis[0]*axis[2], axis[1]*axis[2], -axis[0]*axis[0] - axis[1]*axis[1]]
-            ];
-
-            let sinA = Math.sin(-angle);
-            let cosA = 1 - Math.cos(-angle);
-
-            // R_mat = np.eye(3) + np.sin(-angle) * K + (1 - np.cos(-angle)) * (K @ K)
-            let R_mat = [
-                [1 + sinA*K[0][0] + cosA*K2[0][0], sinA*K[0][1] + cosA*K2[0][1], sinA*K[0][2] + cosA*K2[0][2]],
-                [sinA*K[1][0] + cosA*K2[1][0], 1 + sinA*K[1][1] + cosA*K2[1][1], sinA*K[1][2] + cosA*K2[1][2]],
-                [sinA*K[2][0] + cosA*K2[2][0], sinA*K[2][1] + cosA*K2[2][1], 1 + sinA*K[2][2] + cosA*K2[2][2]]
-            ];
-
-            let R_mat_T = transpose(R_mat);
-
-            // return (pts - start) @ R_mat.T + start
-            return pts.map(p => {
-                let p_shifted = MathUtils.sub(p, start);
-                let p_rot = vecMatMul(p_shifted, R_mat_T);
-                return MathUtils.add(p_rot, start);
-            });
+            return pts.map(pt => rotate_point(pt, start, end, angle));
         }
 
         function agrupar_arestas(vertices, edges) {
-            let x_edges = [], y_edges = [], z_edges = [];
-            edges.forEach(([i1, i2]) => {
-                x_edges.push(vertices[i1][0], vertices[i2][0], null);
-                y_edges.push(vertices[i1][1], vertices[i2][1], null);
-                z_edges.push(vertices[i1][2], vertices[i2][2], null);
+            let x=[], y=[], z=[];
+            edges.forEach(e => {
+                x.push(vertices[e[0]][0], vertices[e[1]][0], null);
+                y.push(vertices[e[0]][1], vertices[e[1]][1], null);
+                z.push(vertices[e[0]][2], vertices[e[1]][2], null);
             });
-            return {x_edges, y_edges, z_edges};
+            return {x, y, z};
+        }
+
+        function extract_coords(vertices) {
+            return {
+                x: vertices.map(v => v[0]),
+                y: vertices.map(v => v[1]),
+                z: vertices.map(v => v[2])
+            };
         }
 
         // ==========================================
@@ -220,22 +186,25 @@
         const v0_tet = [0, 0, 0];
         const v1_tet = [-a_tet, 0, 0];
         const v2_tet = [-a_tet/2, -a_tet * sqrt3/2, 0];
-        const centroid_base_tet = MathUtils.mean([v0_tet, v1_tet, v2_tet]);
+        const centroid_base_tet = MathUtils.mult(MathUtils.add(MathUtils.add(v0_tet, v1_tet), v2_tet), 1/3);
         const v3_tet = MathUtils.add(centroid_base_tet, [0, 0, a_tet * sqrt6/3]);
-        
+
         const vertices_init_tet = [v0_tet, v1_tet, v2_tet, v3_tet];
         const labels_fixo_tet = ['2', '3', '4', '1'];
         const labels_movel_tet = ["2'", "3'", "4'", "1'"];
+        const faces_idx_tet = {i:[0,0,0,1], j:[1,2,3,2], k:[2,3,1,3]};
+        const solid_edges_tet = [[3, 0], [3, 1], [3, 2], [0, 2], [1, 2]];
+        const dotted_edges_tet = [[0, 1]];
 
         function get_pontos_tet(v) {
             return {
                 'Vértice 1': v[3], 'Vértice 2': v[0], 'Vértice 3': v[1], 'Vértice 4': v[2],
-                'Ponto Médio M(1,2)': MathUtils.mean([v[3], v[0]]),
-                'Ponto Médio M(3,4)': MathUtils.mean([v[1], v[2]]),
-                'Ponto Médio M(1,3)': MathUtils.mean([v[3], v[1]]),
-                'Ponto Médio M(2,4)': MathUtils.mean([v[0], v[2]]),
-                'Ponto Médio M(1,4)': MathUtils.mean([v[3], v[2]]),
-                'Ponto Médio M(2,3)': MathUtils.mean([v[0], v[1]]),
+                'Ponto Médio M(1,2)': MathUtils.mult(MathUtils.add(v[3], v[0]), 0.5),
+                'Ponto Médio M(3,4)': MathUtils.mult(MathUtils.add(v[1], v[2]), 0.5),
+                'Ponto Médio M(1,3)': MathUtils.mult(MathUtils.add(v[3], v[1]), 0.5),
+                'Ponto Médio M(2,4)': MathUtils.mult(MathUtils.add(v[0], v[2]), 0.5),
+                'Ponto Médio M(1,4)': MathUtils.mult(MathUtils.add(v[3], v[2]), 0.5),
+                'Ponto Médio M(2,3)': MathUtils.mult(MathUtils.add(v[0], v[1]), 0.5),
                 'Centro C(2,3,4)': MathUtils.mean([v[0], v[1], v[2]]),
                 'Centro C(1,2,3)': MathUtils.mean([v[3], v[0], v[1]]),
                 'Centro C(1,3,4)': MathUtils.mean([v[3], v[1], v[2]]),
@@ -257,219 +226,252 @@
         const labels_movel_cub = labels_fixo_cub.map(l => l + "*");
         const solid_edges_idx_cub = [[5, 6], [6, 7], [7, 4], [4, 5], [5, 1], [7, 3], [4, 0], [3, 0], [0, 1]];
         const dotted_edges_idx_cub = [[1, 2], [2, 3], [6, 2]];
-        const faces_dict_cub = { i: [0,0, 0,0, 1,1, 2,2, 0,0, 4,4], j: [1,2, 1,5, 2,6, 3,7, 3,7, 5,6], k: [2,3, 5,4, 6,5, 7,6, 7,4, 6,7] };
+        
+        const faces_cub = [[0,1,2,3], [0,1,5,4], [1,2,6,5], [2,3,7,6], [0,3,7,4], [4,5,6,7]];
+        const faces_dict_cub = {i:[], j:[], k:[]};
+        faces_cub.forEach(f => {
+            faces_dict_cub.i.push(f[0], f[0]);
+            faces_dict_cub.j.push(f[1], f[2]);
+            faces_dict_cub.k.push(f[2], f[3]);
+        });
 
         function get_pontos_cub(v) {
             return {
                 'Centro do Cubo': MathUtils.mean(v),
                 'Centro Face (1,2,3,4)': MathUtils.mean([v[4],v[5],v[6],v[7]]),
-                "Centro Face (1',2',3',4')": MathUtils.mean([v[0],v[1],v[2],v[3]]),
-                "Centro Face (1,4,2',3')": MathUtils.mean([v[0],v[1],v[5],v[4]]),
-                "Centro Face (2,3,1',4')": MathUtils.mean([v[2],v[3],v[7],v[6]]),
-                "Centro Face (1,2,3',4')": MathUtils.mean([v[1],v[2],v[6],v[5]]),
-                "Centro Face (3,4,1',2')": MathUtils.mean([v[0],v[3],v[7],v[4]]),
+                'Centro Face (1\',2\',3\',4\')': MathUtils.mean([v[0],v[1],v[2],v[3]]),
+                'Centro Face (1,4,2\',3\')': MathUtils.mean([v[0],v[1],v[5],v[4]]),
+                'Centro Face (2,3,1\',4\')': MathUtils.mean([v[2],v[3],v[7],v[6]]),
+                'Centro Face (1,2,3\',4\')': MathUtils.mean([v[1],v[2],v[6],v[5]]),
+                'Centro Face (3,4,1\',2\')': MathUtils.mean([v[0],v[3],v[7],v[4]]),
                 "Vértice 1": v[5], "Vértice 2": v[6], "Vértice 3": v[7], "Vértice 4": v[4],
                 "Vértice 1'": v[3], "Vértice 2'": v[0], "Vértice 3'": v[1], "Vértice 4'": v[2],
-                "Ponto Médio M(1, 2)": MathUtils.mean([v[5], v[6]]), "Ponto Médio M(2, 3)": MathUtils.mean([v[6], v[7]]),
-                "Ponto Médio M(3, 4)": MathUtils.mean([v[7], v[4]]), "Ponto Médio M(4, 1)": MathUtils.mean([v[4], v[5]]),
-                "Ponto Médio M(1', 2')": MathUtils.mean([v[3], v[0]]), "Ponto Médio M(2', 3')": MathUtils.mean([v[0], v[1]]),
-                "Ponto Médio M(3', 4')": MathUtils.mean([v[1], v[2]]), "Ponto Médio M(4', 1')": MathUtils.mean([v[2], v[3]]),
-                "Ponto Médio M(1, 3')": MathUtils.mean([v[5], v[1]]), "Ponto Médio M(2, 4')": MathUtils.mean([v[6], v[2]]),
-                "Ponto Médio M(3, 1')": MathUtils.mean([v[7], v[3]]), "Ponto Médio M(4, 2')": MathUtils.mean([v[4], v[0]])
+                "Ponto Médio M(1, 2)": MathUtils.mult(MathUtils.add(v[5], v[6]), 0.5),
+                "Ponto Médio M(2, 3)": MathUtils.mult(MathUtils.add(v[6], v[7]), 0.5),
+                "Ponto Médio M(3, 4)": MathUtils.mult(MathUtils.add(v[7], v[4]), 0.5),
+                "Ponto Médio M(4, 1)": MathUtils.mult(MathUtils.add(v[4], v[5]), 0.5),
+                "Ponto Médio M(1', 2')": MathUtils.mult(MathUtils.add(v[3], v[0]), 0.5),
+                "Ponto Médio M(2', 3')": MathUtils.mult(MathUtils.add(v[0], v[1]), 0.5),
+                "Ponto Médio M(3', 4')": MathUtils.mult(MathUtils.add(v[1], v[2]), 0.5),
+                "Ponto Médio M(4', 1')": MathUtils.mult(MathUtils.add(v[2], v[3]), 0.5),
+                "Ponto Médio M(1, 3')": MathUtils.mult(MathUtils.add(v[5], v[1]), 0.5),
+                "Ponto Médio M(2, 4')": MathUtils.mult(MathUtils.add(v[6], v[2]), 0.5),
+                "Ponto Médio M(3, 1')": MathUtils.mult(MathUtils.add(v[7], v[3]), 0.5),
+                "Ponto Médio M(4, 2')": MathUtils.mult(MathUtils.add(v[4], v[0]), 0.5)
             };
         }
 
         // ==========================================
-        // dcc.Store EQUIVALENTE (memory-state)
+        // 3. ESTADOS E RENDERIZAÇÃO INICIAL
         // ==========================================
-        let memory_state_tet = { vertices: [...vertices_init_tet], p1: 'Vértice 1', p2: 'Centro C(2,3,4)' };
-        let memory_state_cub = { vertices: [...vertices_init_cub], p1: 'Centro Face (1,2,3,4)', p2: "Centro Face (1',2',3',4')" };
+        let stateTet = { vertices: [...vertices_init_tet], p1: 'Vértice 1', p2: 'Centro C(2,3,4)', angle: 0 };
+        let stateCub = { vertices: [...vertices_init_cub], p1: 'Centro Face (1,2,3,4)', p2: 'Centro Face (1\',2\',3\',4\')', angle: 0 };
 
-        // ==========================================
-        // 7. CALLBACKS E PLOTAGEM
-        // ==========================================
-        const plotlyConfig = { displayModeBar: false }; // Exatamente igual config={'displayModeBar': False}
-
-        function update_tetraedro() {
-            let p1_name = document.getElementById('dropdown-p1-tet').value;
-            let p2_name = document.getElementById('dropdown-p2-tet').value;
-            let angulo_graus = parseFloat(document.getElementById('slider-angulo-tet').value);
-            let angulo_rad = angulo_graus * (Math.PI / 180);
-
-            let current_vertices = memory_state_tet.vertices;
-            let curr_pontos = get_pontos_tet(current_vertices);
-            let start_curr = curr_pontos[p1_name];
-            let end_curr = curr_pontos[p2_name];
-            
-            let pts_movel = rotate_points(current_vertices, start_curr, end_curr, angulo_rad);
-            
-            let faces_idx = {i:[0,0,0,1], j:[1,2,3,2], k:[2,3,1,3]};
-            let solid_edges = [[3, 0], [3, 1], [3, 2], [0, 2], [1, 2]];
-            let dotted_edges = [[0, 1]];
-
-            let traces = [];
-            
-            // Fixo
-            let fix = agrupar_arestas(vertices_init_tet, []); // helper variables
-            traces.push({ type: 'mesh3d', x: vertices_init_tet.map(p=>p[0]), y: vertices_init_tet.map(p=>p[1]), z: vertices_init_tet.map(p=>p[2]), i: faces_idx.i, j: faces_idx.j, k: faces_idx.k, color: 'lightgray', opacity: 0.15, showscale: false, hoverinfo: 'none' });
-            
-            let x_solid_fix = agrupar_arestas(vertices_init_tet, solid_edges);
-            // The original python code doesn't plot fixed solid edges for Tet, but plots movel ones.
-            // Oh wait, looking at python: it ONLY plotted solid/dotted for pts_movel (Wait, no, you added "CÓDIGO NOVO" in python)
-            let x_solid = agrupar_arestas(pts_movel, solid_edges);
-            traces.push({ type: 'scatter3d', mode: 'lines', x: x_solid.x_edges, y: x_solid.y_edges, z: x_solid.z_edges, line: {color: 'black', width: 3}, hoverinfo: 'none' });
-
-            let x_dotted = agrupar_arestas(pts_movel, dotted_edges);
-            traces.push({ type: 'scatter3d', mode: 'lines', x: x_dotted.x_edges, y: x_dotted.y_edges, z: x_dotted.z_edges, line: {color: 'black', width: 3, dash: 'dot'}, hoverinfo: 'none' });
-            
-            traces.push({ type: 'scatter3d', mode: 'text', x: vertices_init_tet.map(p=>p[0]+0.03), y: vertices_init_tet.map(p=>p[1]), z: vertices_init_tet.map(p=>p[2]), text: labels_fixo_tet, textfont: {color: 'gray', size: 12}, marker: {size: 4, color: 'gray'}, hoverinfo: 'none' });
-
-            // Móvel
-            traces.push({ type: 'mesh3d', x: pts_movel.map(p=>p[0]), y: pts_movel.map(p=>p[1]), z: pts_movel.map(p=>p[2]), i: faces_idx.i, j: faces_idx.j, k: faces_idx.k, color: 'firebrick', opacity: 0.4, showscale: false, hoverinfo: 'none' });
-            traces.push({ type: 'scatter3d', mode: 'text', x: pts_movel.map(p=>p[0]-0.05), y: pts_movel.map(p=>p[1]), z: pts_movel.map(p=>p[2]), text: labels_movel_tet, textfont: {color: 'black', size: 16}, marker: {size: 6, color: 'black'}, hoverinfo: 'none' });
-
-            // Eixo
-            if (!MathUtils.allclose(start_curr, end_curr)) {
-                let vec = MathUtils.mul(MathUtils.sub(end_curr, start_curr), 1/MathUtils.norm(MathUtils.sub(end_curr, start_curr)));
-                traces.push({ type: 'scatter3d', mode: 'lines', x: [start_curr[0]-vec[0]*0.8, end_curr[0]+vec[0]*0.8], y: [start_curr[1]-vec[1]*0.8, end_curr[1]+vec[1]*0.8], z: [start_curr[2]-vec[2]*0.8, end_curr[2]+vec[2]*0.8], line: {color: 'black', width: 4, dash: 'solid'}, hoverinfo: 'none' });
-                traces.push({ type: 'scatter3d', mode: 'markers', x: [start_curr[0], end_curr[0]], y: [start_curr[1], end_curr[1]], z: [start_curr[2], end_curr[2]], marker: {size: 5, color: 'gold'}, hoverinfo: 'none' });
+        function populateDropdown(selectId, optionsObj, defaultValue) {
+            let select = document.getElementById(selectId);
+            select.innerHTML = '';
+            for(let key in optionsObj) {
+                let opt = document.createElement('option');
+                opt.value = key; opt.innerHTML = key;
+                if(key === defaultValue) opt.selected = true;
+                select.appendChild(opt);
             }
-
-            let layout = { uirevision: 'tet', showlegend: false, scene: {xaxis:{visible:false}, yaxis:{visible:false}, zaxis:{visible:false}, aspectmode:'data', camera: {eye: {x: 1.5, y: -2.7, z: 0.8}}}, margin: {l:0, r:0, b:0, t:0}, plot_bgcolor: 'white', paper_bgcolor: 'white' };
-            Plotly.react('grafico-tetraedro', traces, layout, plotlyConfig);
         }
 
-        function update_cubo() {
-            let p1_name = document.getElementById('dropdown-p1-cub').value;
-            let p2_name = document.getElementById('dropdown-p2-cub').value;
-            let angulo_graus = parseFloat(document.getElementById('slider-angulo-cub').value);
-            let angulo_rad = angulo_graus * (Math.PI / 180);
-
-            let current_vertices = memory_state_cub.vertices;
-            let curr_pontos = get_pontos_cub(current_vertices);
-            let start_curr = curr_pontos[p1_name];
-            let end_curr = curr_pontos[p2_name];
+        function initUI() {
+            populateDropdown('dropdown-p1-tet', get_pontos_tet(vertices_init_tet), stateTet.p1);
+            populateDropdown('dropdown-p2-tet', get_pontos_tet(vertices_init_tet), stateTet.p2);
+            populateDropdown('dropdown-p1-cub', get_pontos_cub(vertices_init_cub), stateCub.p1);
+            populateDropdown('dropdown-p2-cub', get_pontos_cub(vertices_init_cub), stateCub.p2);
             
-            let pts_movel = rotate_points(current_vertices, start_curr, end_curr, angulo_rad);
-
-            let traces = [];
-            
-            // Fixo
-            traces.push({ type: 'mesh3d', x: vertices_init_cub.map(p=>p[0]), y: vertices_init_cub.map(p=>p[1]), z: vertices_init_cub.map(p=>p[2]), i: faces_dict_cub.i, j: faces_dict_cub.j, k: faces_dict_cub.k, color: 'lightgray', opacity: 0.1, showscale: false, hoverinfo: 'none' });
-            let fixSolid = agrupar_arestas(vertices_init_cub, solid_edges_idx_cub);
-            let fixDotted = agrupar_arestas(vertices_init_cub, dotted_edges_idx_cub);
-            traces.push({ type: 'scatter3d', mode: 'lines', x: fixSolid.x_edges, y: fixSolid.y_edges, z: fixSolid.z_edges, line: {color: 'gray', width: 2}, hoverinfo: 'none' });
-            traces.push({ type: 'scatter3d', mode: 'lines', x: fixDotted.x_edges, y: fixDotted.y_edges, z: fixDotted.z_edges, line: {color: 'gray', width: 2, dash: 'dot'}, hoverinfo: 'none' });
-            traces.push({ type: 'scatter3d', mode: 'text', x: vertices_init_cub.map(p=>p[0]+0.15), y: vertices_init_cub.map(p=>p[1]), z: vertices_init_cub.map(p=>p[2]-0.25), text: labels_fixo_cub, textfont: {color: 'gray', size: 12}, hoverinfo: 'none' });
-
-            // Móvel
-            traces.push({ type: 'mesh3d', x: pts_movel.map(p=>p[0]), y: pts_movel.map(p=>p[1]), z: pts_movel.map(p=>p[2]), i: faces_dict_cub.i, j: faces_dict_cub.j, k: faces_dict_cub.k, color: 'firebrick', opacity: 0.3, showscale: false, hoverinfo: 'none' });
-            let movSolid = agrupar_arestas(pts_movel, solid_edges_idx_cub);
-            let movDotted = agrupar_arestas(pts_movel, dotted_edges_idx_cub);
-            traces.push({ type: 'scatter3d', mode: 'lines', x: movSolid.x_edges, y: movSolid.y_edges, z: movSolid.z_edges, line: {color: 'black', width: 4}, hoverinfo: 'none' });
-            traces.push({ type: 'scatter3d', mode: 'lines', x: movDotted.x_edges, y: movDotted.y_edges, z: movDotted.z_edges, line: {color: 'black', width: 3, dash: 'dot'}, hoverinfo: 'none' });
-            traces.push({ type: 'scatter3d', mode: 'text', x: pts_movel.map(p=>p[0]), y: pts_movel.map(p=>p[1]), z: pts_movel.map(p=>p[2]), text: labels_movel_cub, textfont: {color: 'black', size: 16}, hoverinfo: 'none' });
-
-            // Eixo
-            if (!MathUtils.allclose(start_curr, end_curr)) {
-                let vec = MathUtils.mul(MathUtils.sub(end_curr, start_curr), 1/MathUtils.norm(MathUtils.sub(end_curr, start_curr)));
-                traces.push({ type: 'scatter3d', mode: 'lines', x: [start_curr[0]-vec[0]*1.0, end_curr[0]+vec[0]*1.0], y: [start_curr[1]-vec[1]*1.0, end_curr[1]+vec[1]*1.0], z: [start_curr[2]-vec[2]*1.0, end_curr[2]+vec[2]*1.0], line: {color: 'black', width: 4, dash: 'solid'}, hoverinfo: 'none' });
-                traces.push({ type: 'scatter3d', mode: 'markers', x: [start_curr[0], end_curr[0]], y: [start_curr[1], end_curr[1]], z: [start_curr[2], end_curr[2]], marker: {size: 5, color: 'gold'}, hoverinfo: 'none' });
-            }
-
-            let layout = { uirevision: 'cub', showlegend: false, scene: {xaxis:{visible:false}, yaxis:{visible:false}, zaxis:{visible:false}, aspectmode:'data', camera: {eye: {x: -2.8, y: -1.8, z: 1.2}}}, margin: {l:0, r:0, b:0, t:0}, plot_bgcolor: 'white', paper_bgcolor: 'white' };
-            Plotly.react('grafico-cubo', traces, layout, plotlyConfig);
+            drawTetraedro();
+            drawCubo();
         }
 
         // ==========================================
-        // EVENT LISTNERS DO DASH APP
+        // 4. ROTEAMENTO
         // ==========================================
-        function populate_dropdowns(selectIds, optionsObj, defaultVal) {
-            selectIds.forEach(id => {
-                let select = document.getElementById(id);
-                select.innerHTML = '';
-                Object.keys(optionsObj).forEach(key => {
-                    let opt = document.createElement('option');
-                    opt.value = key; opt.innerHTML = key;
-                    if(key === defaultVal) opt.selected = true;
-                    select.appendChild(opt);
-                });
-            });
-        }
-
-        function trigger_change_tet(e) {
-            // Emula o ctx.triggered_id in ['dropdown-p1-tet', 'dropdown-p2-tet']
-            let p1_name = document.getElementById('dropdown-p1-tet').value;
-            let p2_name = document.getElementById('dropdown-p2-tet').value;
-            let angulo_graus = parseFloat(document.getElementById('slider-angulo-tet').value);
-            
-            let old_pontos = get_pontos_tet(memory_state_tet.vertices);
-            let baked_vertices = rotate_points(memory_state_tet.vertices, old_pontos[memory_state_tet.p1], old_pontos[memory_state_tet.p2], angulo_graus * (Math.PI/180));
-            
-            memory_state_tet = { vertices: baked_vertices, p1: p1_name, p2: p2_name };
-            document.getElementById('slider-angulo-tet').value = 0;
-            update_tetraedro();
-        }
-
-        function trigger_change_cub(e) {
-            let p1_name = document.getElementById('dropdown-p1-cub').value;
-            let p2_name = document.getElementById('dropdown-p2-cub').value;
-            let angulo_graus = parseFloat(document.getElementById('slider-angulo-cub').value);
-            
-            let old_pontos = get_pontos_cub(memory_state_cub.vertices);
-            let baked_vertices = rotate_points(memory_state_cub.vertices, old_pontos[memory_state_cub.p1], old_pontos[memory_state_cub.p2], angulo_graus * (Math.PI/180));
-            
-            memory_state_cub = { vertices: baked_vertices, p1: p1_name, p2: p2_name };
-            document.getElementById('slider-angulo-cub').value = 0;
-            update_cubo();
-        }
-
-        // Navegação de Rotas
-        function navigate(pathname, el) {
+        function navigate(pageId, element) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            if(el) el.classList.add('active');
-
-            if(pathname === '/') document.getElementById('page-home').classList.add('active');
-            else if(pathname === '/tetraedro') { 
-                document.getElementById('page-tetraedro').classList.add('active');
-                setTimeout(() => Plotly.Plots.resize('grafico-tetraedro'), 50);
-            }
-            else if(pathname === '/cubo') { 
-                document.getElementById('page-cubo').classList.add('active');
-                setTimeout(() => Plotly.Plots.resize('grafico-cubo'), 50);
-            }
-            else if(pathname === '/dodecaedro') document.getElementById('page-dodecaedro').classList.add('active');
+            document.getElementById(pageId).classList.add('active');
+            element.classList.add('active');
+            // Redimensiona o gráfico se for a primeira vez que a aba é aberta
+            Plotly.Plots.resize('grafico-tetraedro');
+            Plotly.Plots.resize('grafico-cubo');
         }
 
-        window.onload = function() {
-            // Dropdowns Tetraedro
-            populate_dropdowns(['dropdown-p1-tet'], get_pontos_tet(vertices_init_tet), memory_state_tet.p1);
-            populate_dropdowns(['dropdown-p2-tet'], get_pontos_tet(vertices_init_tet), memory_state_tet.p2);
-            document.getElementById('dropdown-p1-tet').addEventListener('change', trigger_change_tet);
-            document.getElementById('dropdown-p2-tet').addEventListener('change', trigger_change_tet);
-            document.getElementById('slider-angulo-tet').addEventListener('input', update_tetraedro);
-            document.getElementById('btn-reset-tet').addEventListener('click', () => {
-                memory_state_tet = { vertices: [...vertices_init_tet], p1: document.getElementById('dropdown-p1-tet').value, p2: document.getElementById('dropdown-p2-tet').value };
+        // ==========================================
+        // 5. LÓGICA DO TETRAEDRO
+        // ==========================================
+        function drawTetraedro() {
+            let rad = stateTet.angle * (Math.PI / 180);
+            let pts = get_pontos_tet(stateTet.vertices);
+            let start = pts[stateTet.p1];
+            let end = pts[stateTet.p2];
+            let pts_movel = rotate_points(stateTet.vertices, start, end, rad);
+
+            let data = [];
+            let fixo_c = extract_coords(vertices_init_tet);
+            
+            // Fixo Mesh
+            data.push({ type: 'mesh3d', x: fixo_c.x, y: fixo_c.y, z: fixo_c.z, i: faces_idx_tet.i, j: faces_idx_tet.j, k: faces_idx_tet.k, color: 'lightgray', opacity: 0.15, hoverinfo: 'skip' });
+            
+            // Fixo Edges
+            let sol_f = agrupar_arestas(vertices_init_tet, solid_edges_tet);
+            data.push({ type: 'scatter3d', mode: 'lines', x: sol_f.x, y: sol_f.y, z: sol_f.z, line: {color: 'gray', width: 2}, hoverinfo: 'skip' });
+            let dot_f = agrupar_arestas(vertices_init_tet, dotted_edges_tet);
+            data.push({ type: 'scatter3d', mode: 'lines', x: dot_f.x, y: dot_f.y, z: dot_f.z, line: {color: 'gray', width: 2, dash: 'dot'}, hoverinfo: 'skip' });
+            
+            // Fixo Labels
+            data.push({ type: 'scatter3d', mode: 'text', x: fixo_c.x.map(x=>x+0.03), y: fixo_c.y, z: fixo_c.z, text: labels_fixo_tet, textfont: {color: 'gray', size: 12}, hoverinfo: 'skip' });
+
+            // Movel Mesh
+            let mov_c = extract_coords(pts_movel);
+            data.push({ type: 'mesh3d', x: mov_c.x, y: mov_c.y, z: mov_c.z, i: faces_idx_tet.i, j: faces_idx_tet.j, k: faces_idx_tet.k, color: 'firebrick', opacity: 0.4, hoverinfo: 'skip' });
+            
+            // Movel Edges
+            let sol_m = agrupar_arestas(pts_movel, solid_edges_tet);
+            data.push({ type: 'scatter3d', mode: 'lines', x: sol_m.x, y: sol_m.y, z: sol_m.z, line: {color: 'black', width: 3}, hoverinfo: 'skip' });
+            let dot_m = agrupar_arestas(pts_movel, dotted_edges_tet);
+            data.push({ type: 'scatter3d', mode: 'lines', x: dot_m.x, y: dot_m.y, z: dot_m.z, line: {color: 'black', width: 3, dash: 'dot'}, hoverinfo: 'skip' });
+            
+            // Movel Labels
+            data.push({ type: 'scatter3d', mode: 'text+markers', x: mov_c.x.map(x=>x-0.05), y: mov_c.y, z: mov_c.z, text: labels_movel_tet, textfont: {color: 'black', size: 16}, marker: {size: 6, color: 'black'}, hoverinfo: 'skip' });
+
+            // Eixo
+            if(!MathUtils.allclose(start, end)) {
+                let vec = MathUtils.mult(MathUtils.sub(end, start), 1/MathUtils.norm(MathUtils.sub(end, start)));
+                let ex_start = MathUtils.sub(start, MathUtils.mult(vec, 0.8));
+                let ex_end = MathUtils.add(end, MathUtils.mult(vec, 0.8));
+                data.push({ type: 'scatter3d', mode: 'lines', x: [ex_start[0], ex_end[0]], y: [ex_start[1], ex_end[1]], z: [ex_start[2], ex_end[2]], line: {color: 'black', width: 4}, hoverinfo: 'skip' });
+                data.push({ type: 'scatter3d', mode: 'markers', x: [start[0], end[0]], y: [start[1], end[1]], z: [start[2], end[2]], marker: {size: 5, color: 'gold'}, hoverinfo: 'skip' });
+            }
+
+            let layout = {
+                uirevision: 'tet', showlegend: false, margin: {l:0, r:0, b:0, t:0},
+                scene: { xaxis: {visible: false}, yaxis: {visible: false}, zaxis: {visible: false}, aspectmode: 'data', camera: {eye: {x: 1.5, y: -2.7, z: 0.8}} }
+            };
+
+            Plotly.react('grafico-tetraedro', data, layout);
+        }
+
+        // Eventos Tetraedro
+        function updateTetState(isDrop) {
+            if(isDrop) {
+                let rad = stateTet.angle * (Math.PI / 180);
+                let pts = get_pontos_tet(stateTet.vertices);
+                stateTet.vertices = rotate_points(stateTet.vertices, pts[stateTet.p1], pts[stateTet.p2], rad);
+                stateTet.p1 = document.getElementById('dropdown-p1-tet').value;
+                stateTet.p2 = document.getElementById('dropdown-p2-tet').value;
+                stateTet.angle = 0;
                 document.getElementById('slider-angulo-tet').value = 0;
-                update_tetraedro();
-            });
+                document.getElementById('val-angulo-tet').innerText = '0°';
+            } else {
+                stateTet.angle = document.getElementById('slider-angulo-tet').value;
+                document.getElementById('val-angulo-tet').innerText = stateTet.angle + '°';
+            }
+            drawTetraedro();
+        }
 
-            // Dropdowns Cubo
-            populate_dropdowns(['dropdown-p1-cub'], get_pontos_cub(vertices_init_cub), memory_state_cub.p1);
-            populate_dropdowns(['dropdown-p2-cub'], get_pontos_cub(vertices_init_cub), memory_state_cub.p2);
-            document.getElementById('dropdown-p1-cub').addEventListener('change', trigger_change_cub);
-            document.getElementById('dropdown-p2-cub').addEventListener('change', trigger_change_cub);
-            document.getElementById('slider-angulo-cub').addEventListener('input', update_cubo);
-            document.getElementById('btn-reset-cub').addEventListener('click', () => {
-                memory_state_cub = { vertices: [...vertices_init_cub], p1: document.getElementById('dropdown-p1-cub').value, p2: document.getElementById('dropdown-p2-cub').value };
+        document.getElementById('slider-angulo-tet').addEventListener('input', () => updateTetState(false));
+        document.getElementById('dropdown-p1-tet').addEventListener('change', () => updateTetState(true));
+        document.getElementById('dropdown-p2-tet').addEventListener('change', () => updateTetState(true));
+        document.getElementById('btn-reset-tet').addEventListener('click', () => {
+            stateTet = { vertices: [...vertices_init_tet], p1: document.getElementById('dropdown-p1-tet').value, p2: document.getElementById('dropdown-p2-tet').value, angle: 0 };
+            document.getElementById('slider-angulo-tet').value = 0;
+            document.getElementById('val-angulo-tet').innerText = '0°';
+            drawTetraedro();
+        });
+
+        // ==========================================
+        // 6. LÓGICA DO CUBO
+        // ==========================================
+        function drawCubo() {
+            let rad = stateCub.angle * (Math.PI / 180);
+            let pts = get_pontos_cub(stateCub.vertices);
+            let start = pts[stateCub.p1];
+            let end = pts[stateCub.p2];
+            let pts_movel = rotate_points(stateCub.vertices, start, end, rad);
+
+            let data = [];
+            let fixo_c = extract_coords(vertices_init_cub);
+            
+            // Fixo Mesh
+            data.push({ type: 'mesh3d', x: fixo_c.x, y: fixo_c.y, z: fixo_c.z, i: faces_dict_cub.i, j: faces_dict_cub.j, k: faces_dict_cub.k, color: 'lightgray', opacity: 0.1, hoverinfo: 'skip' });
+            
+            // Fixo Edges 
+            let sol_f = agrupar_arestas(vertices_init_cub, solid_edges_idx_cub);
+            data.push({ type: 'scatter3d', mode: 'lines', x: sol_f.x, y: sol_f.y, z: sol_f.z, line: {color: 'gray', width: 2}, hoverinfo: 'skip' });
+            let dot_f = agrupar_arestas(vertices_init_cub, dotted_edges_idx_cub);
+            data.push({ type: 'scatter3d', mode: 'lines', x: dot_f.x, y: dot_f.y, z: dot_f.z, line: {color: 'gray', width: 2, dash: 'dot'}, hoverinfo: 'skip' });
+            
+            // Fixo Labels
+            data.push({ type: 'scatter3d', mode: 'text', x: fixo_c.x.map(x=>x+0.15), y: fixo_c.y, z: fixo_c.z.map(z=>z-0.25), text: labels_fixo_cub, textfont: {color: 'gray', size: 12}, hoverinfo: 'skip' });
+
+            // Movel Mesh
+            let mov_c = extract_coords(pts_movel);
+            data.push({ type: 'mesh3d', x: mov_c.x, y: mov_c.y, z: mov_c.z, i: faces_dict_cub.i, j: faces_dict_cub.j, k: faces_dict_cub.k, color: 'firebrick', opacity: 0.3, hoverinfo: 'skip' });
+            
+            // Movel Edges
+            let sol_m = agrupar_arestas(pts_movel, solid_edges_idx_cub);
+            data.push({ type: 'scatter3d', mode: 'lines', x: sol_m.x, y: sol_m.y, z: sol_m.z, line: {color: 'black', width: 4}, hoverinfo: 'skip' });
+            let dot_m = agrupar_arestas(pts_movel, dotted_edges_idx_cub);
+            data.push({ type: 'scatter3d', mode: 'lines', x: dot_m.x, y: dot_m.y, z: dot_m.z, line: {color: 'black', width: 3, dash: 'dot'}, hoverinfo: 'skip' });
+            
+            // Movel Labels
+            data.push({ type: 'scatter3d', mode: 'text', x: mov_c.x, y: mov_c.y, z: mov_c.z, text: labels_movel_cub, textfont: {color: 'black', size: 16}, hoverinfo: 'skip' });
+
+            // Eixo
+            if(!MathUtils.allclose(start, end)) {
+                let vec = MathUtils.mult(MathUtils.sub(end, start), 1/MathUtils.norm(MathUtils.sub(end, start)));
+                let ex_start = MathUtils.sub(start, MathUtils.mult(vec, 1.0));
+                let ex_end = MathUtils.add(end, MathUtils.mult(vec, 1.0));
+                data.push({ type: 'scatter3d', mode: 'lines', x: [ex_start[0], ex_end[0]], y: [ex_start[1], ex_end[1]], z: [ex_start[2], ex_end[2]], line: {color: 'black', width: 4}, hoverinfo: 'skip' });
+                data.push({ type: 'scatter3d', mode: 'markers', x: [start[0], end[0]], y: [start[1], end[1]], z: [start[2], end[2]], marker: {size: 5, color: 'gold'}, hoverinfo: 'skip' });
+            }
+
+            let layout = {
+                uirevision: 'cub', showlegend: false, margin: {l:0, r:0, b:0, t:0},
+                scene: { xaxis: {visible: false}, yaxis: {visible: false}, zaxis: {visible: false}, aspectmode: 'data', camera: {eye: {x: -2.8, y: -1.8, z: 1.2}} }
+            };
+
+            Plotly.react('grafico-cubo', data, layout);
+        }
+
+        // Eventos Cubo
+        function updateCubState(isDrop) {
+            if(isDrop) {
+                let rad = stateCub.angle * (Math.PI / 180);
+                let pts = get_pontos_cub(stateCub.vertices);
+                stateCub.vertices = rotate_points(stateCub.vertices, pts[stateCub.p1], pts[stateCub.p2], rad);
+                stateCub.p1 = document.getElementById('dropdown-p1-cub').value;
+                stateCub.p2 = document.getElementById('dropdown-p2-cub').value;
+                stateCub.angle = 0;
                 document.getElementById('slider-angulo-cub').value = 0;
-                update_cubo();
-            });
+                document.getElementById('val-angulo-cub').innerText = '0°';
+            } else {
+                stateCub.angle = document.getElementById('slider-angulo-cub').value;
+                document.getElementById('val-angulo-cub').innerText = stateCub.angle + '°';
+            }
+            drawCubo();
+        }
 
-            update_tetraedro();
-            update_cubo();
-        };
+        document.getElementById('slider-angulo-cub').addEventListener('input', () => updateCubState(false));
+        document.getElementById('dropdown-p1-cub').addEventListener('change', () => updateCubState(true));
+        document.getElementById('dropdown-p2-cub').addEventListener('change', () => updateCubState(true));
+        document.getElementById('btn-reset-cub').addEventListener('click', () => {
+            stateCub = { vertices: [...vertices_init_cub], p1: document.getElementById('dropdown-p1-cub').value, p2: document.getElementById('dropdown-p2-cub').value, angle: 0 };
+            document.getElementById('slider-angulo-cub').value = 0;
+            document.getElementById('val-angulo-cub').innerText = '0°';
+            drawCubo();
+        });
+
+        // ==========================================
+        // BOOTSTRAP INICIAL
+        // ==========================================
+        window.onload = initUI;
+
     </script>
 </body>
 </html>
