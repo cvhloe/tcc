@@ -24,36 +24,129 @@
     <style>
         body { margin: 0; padding: 0; }
         
+        /* Menu Superior */
         .sidebar {
-            position: fixed; top: 0; left: 0; bottom: 0;
-            width: 18rem; padding: 2rem 1rem;
-            background-color: #2c3e50; color: white;
-            overflow-y: auto;
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            height: 4rem; 
+            padding: 0 2rem; 
+            background-color: #2c3e50; 
+            color: white;
+            display: flex; 
+            align-items: center; 
+            border-radius: 15px;
+            z-index: 1000;
+            gap: 60px;
+            /* box-shadow: 10px 80px 50px rgba(0,0,0,0.1);   */
         }
-        .sidebar .nav-pills .nav-link { color: #e0e2e2; margin-bottom: 2px; border-radius: 0.25rem; cursor: pointer;}
-        .sidebar .nav-pills .nav-link.active { background-color: #18bc9c; color: white; }
 
+        .sidebar .nav-pills {
+            display: flex !important;
+            justify-content: flex-end;
+            flex-direction: row !important;
+            gap: 40px; /* Espaço entre os itens */
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .sidebar .nav-pills .nav-link { 
+            color: #e0e2e2; 
+            margin-bottom: 0; /* Importante: remove o que empurrava o de baixo */
+            border-radius: 5px; 
+            cursor: pointer;
+            padding: 0.2rem 0.3rem;
+            display: inline-block; /* Garante que se comporte como botão */
+            white-space: nowrap; /* Impede que o texto quebre em duas linhas */
+        }
+        
+        .sidebar .nav-pills .nav-link:hover {
+            background-color: #34495e; /* Um tom levemente mais claro que o fundo da barra */
+            color: #6678ff; /* O texto fica verde, ou você pode inverter as cores */
+            transition: all 0.3s ease; /* Faz a mudança ser suave, não instantânea */
+        }
+
+        .sidebar .nav-pills .nav-link.active { 
+            background-color: #283150; 
+            color: white; 
+        }
+
+        /* CONTEÚDO: Onde a mágica acontece */
         .content {
-            margin-left: 20rem; margin-right: 2rem; padding: 2rem 1rem;
+            margin-top: 5rem; /* Espaço para não ficar sob o menu (4rem do menu + 1rem de respiro) */
+            margin-left: auto; 
+            margin-right: auto;
+            max-width: 1200px; /* Opcional: limita a largura em telas muito grandes para melhor leitura */
+            padding: 1rem 2rem;
         }
 
         .page { display: none; }
         .page.active { display: block; }
         
-        .solid-container { display: flex; height: 75vh; }
+        .solid-container { display: flex; height: 75vh; gap: 20px; }
         .control-panel { 
-            width: 30%; padding: 20px; border-right: 1px solid #ccc; 
+            width: 30%; padding: 20px; border: 1px solid #ddd; 
             background-color: #f9f9f9; border-radius: 10px; 
         }
         .graph-panel { width: 70%; height: 100%; }
         
         .slider-marks { display: flex; justify-content: space-between; font-size: 12px; color: #7b8a8b; margin-top: -5px; }
         
-        /* Estilos adicionais para os textos matemáticos */
+        /* Estilos matemáticos */
         .math-content h2 { margin-top: 2rem; color: #2c3e50; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px;}
         .math-content h3 { margin-top: 1.5rem; color: #18bc9c; }
         .math-content p { font-size: 18px; line-height: 1.8; text-align: justify; }
         .math-content .demonstracao { font-style: italic; color: #555; }
+        
+        /* Garante que a barra do controle deslizante apareça */
+        input[type=range] {
+            -webkit-appearance: none; 
+            appearance: none;
+            width: 100%;
+            background: transparent; 
+        }
+
+        /* Estilo da linha (track) para navegadores baseados em WebKit (Chrome, Edge, Safari) */
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            background: #dce4ec; /* Cinza claro combinando com o tema Flatly */
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Estilo da bolinha (thumb) para WebKit */
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 18px;
+            width: 18px;
+            border-radius: 50%;
+            background: #2c3e50; /* Azul escuro/cinza do tema */
+            cursor: pointer;
+            margin-top: -6px; /* Centraliza a bolinha na linha */
+        }
+
+        /* Estilo da linha para o Firefox */
+        input[type=range]::-moz-range-track {
+            width: 100%;
+            height: 6px;
+            background: #dce4ec;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Estilo da bolinha para o Firefox */
+        input[type=range]::-moz-range-thumb {
+            height: 18px;
+            width: 18px;
+            border-radius: 50%;
+            background: #2c3e50;
+            cursor: pointer;
+            border: none;
+        }
     </style>
 </head>
 <body>
@@ -65,8 +158,7 @@
             <a class="nav-link" href="#/" id="nav-home">Fundamentos e Teoremas</a>
             <a class="nav-link" href="#/tetraedro" id="nav-tet">O Tetraedro (A4)</a>
             <a class="nav-link" href="#/cubo" id="nav-cub">Cubo e Octaedro (S4)</a>
-            <!-- <a class="nav-link" href="#/dodecaedro" id="nav-dod">Dodecaedro e Icosaedro</a> -->
-        </nav>
+            </nav>
     </div>
 
     <div id="page-content" class="content">
@@ -215,9 +307,11 @@
                     <select id="dropdown-p2-tet" class="form-select mb-3"></select>
                     
                     <label class="form-label">Ângulo de Rotação Atual (α):</label>
-                    <input type="range" class="form-range" id="slider-angulo-tet" min="0" max="360" step="1" value="0">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <input type="range" class="form-range flex-grow-1" id="slider-angulo-tet" min="0" max="360" step="1" value="0">
+                        <input type="number" class="form-control" id="input-angulo-tet" min="0" max="360" value="0" style="width: 80px;">
+                    </div>
                     <div class="slider-marks">
-                        <span>0°</span><span>90°</span><span>120°</span><span>180°</span><span>240°</span><span>360°</span>
                     </div>
                     
                     <button id="btn-reset-tet" class="btn btn-secondary w-100" style="margin-top: 40px;">Resetar Posição Original</button>
@@ -243,9 +337,11 @@
                     <select id="dropdown-p2-cub" class="form-select mb-3"></select>
                     
                     <label class="form-label">Ângulo de Rotação Atual (α):</label>
-                    <input type="range" class="form-range" id="slider-angulo-cub" min="0" max="360" step="1" value="0">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <input type="range" class="form-range flex-grow-1" id="slider-angulo-cub" min="0" max="360" step="1" value="0">
+                        <input type="number" class="form-control" id="input-angulo-cub" min="0" max="360" value="0" style="width: 80px;">
+                    </div>
                     <div class="slider-marks">
-                        <span>0°</span><span>90°</span><span>120°</span><span>180°</span><span>270°</span><span>360°</span>
                     </div>
                     
                     <button id="btn-reset-cub" class="btn btn-secondary w-100" style="margin-top: 40px;">Resetar Posição Original</button>
@@ -256,12 +352,7 @@
             </div>
         </div>
 
-        <!-- <div id="page-dodecaedro" class="page">
-            <h1 class="text-primary">Dodecaedro e Icosaedro</h1>
-            <hr>
-            <h3>Página em Construção...</h3>
-        </div> -->
-    </div>
+        </div>
 
     <script>
         // ==========================================
@@ -531,6 +622,7 @@
             
             memory_state_tet = { vertices: baked_vertices, p1: p1_name, p2: p2_name };
             document.getElementById('slider-angulo-tet').value = 0;
+            document.getElementById('input-angulo-tet').value = 0;
             update_tetraedro();
         }
 
@@ -544,6 +636,7 @@
             
             memory_state_cub = { vertices: baked_vertices, p1: p1_name, p2: p2_name };
             document.getElementById('slider-angulo-cub').value = 0;
+            document.getElementById('input-angulo-cub').value = 0;
             update_cubo();
         }
 
@@ -577,25 +670,57 @@
         window.addEventListener('hashchange', handleRouting);
 
         window.onload = function() {
+            // Setup Tetraedro
             populate_dropdowns(['dropdown-p1-tet'], get_pontos_tet(vertices_init_tet), memory_state_tet.p1);
             populate_dropdowns(['dropdown-p2-tet'], get_pontos_tet(vertices_init_tet), memory_state_tet.p2);
             document.getElementById('dropdown-p1-tet').addEventListener('change', trigger_change_tet);
             document.getElementById('dropdown-p2-tet').addEventListener('change', trigger_change_tet);
-            document.getElementById('slider-angulo-tet').addEventListener('input', update_tetraedro);
-            document.getElementById('btn-reset-tet').addEventListener('click', () => {
-                memory_state_tet = { vertices: [...vertices_init_tet], p1: document.getElementById('dropdown-p1-tet').value, p2: document.getElementById('dropdown-p2-tet').value };
-                document.getElementById('slider-angulo-tet').value = 0;
+            
+            // Sincronização do Slider e Input para o Tetraedro
+            const sliderTet = document.getElementById('slider-angulo-tet');
+            const inputTet = document.getElementById('input-angulo-tet');
+            sliderTet.addEventListener('input', (e) => {
+                inputTet.value = e.target.value;
+                update_tetraedro();
+            });
+            inputTet.addEventListener('input', (e) => {
+                let val = parseFloat(e.target.value);
+                if (isNaN(val)) val = 0;
+                sliderTet.value = val;
                 update_tetraedro();
             });
 
+            document.getElementById('btn-reset-tet').addEventListener('click', () => {
+                memory_state_tet = { vertices: [...vertices_init_tet], p1: document.getElementById('dropdown-p1-tet').value, p2: document.getElementById('dropdown-p2-tet').value };
+                sliderTet.value = 0;
+                inputTet.value = 0;
+                update_tetraedro();
+            });
+
+            // Setup Cubo
             populate_dropdowns(['dropdown-p1-cub'], get_pontos_cub(vertices_init_cub), memory_state_cub.p1);
             populate_dropdowns(['dropdown-p2-cub'], get_pontos_cub(vertices_init_cub), memory_state_cub.p2);
             document.getElementById('dropdown-p1-cub').addEventListener('change', trigger_change_cub);
             document.getElementById('dropdown-p2-cub').addEventListener('change', trigger_change_cub);
-            document.getElementById('slider-angulo-cub').addEventListener('input', update_cubo);
+            
+            // Sincronização do Slider e Input para o Cubo
+            const sliderCub = document.getElementById('slider-angulo-cub');
+            const inputCub = document.getElementById('input-angulo-cub');
+            sliderCub.addEventListener('input', (e) => {
+                inputCub.value = e.target.value;
+                update_cubo();
+            });
+            inputCub.addEventListener('input', (e) => {
+                let val = parseFloat(e.target.value);
+                if (isNaN(val)) val = 0;
+                sliderCub.value = val;
+                update_cubo();
+            });
+
             document.getElementById('btn-reset-cub').addEventListener('click', () => {
                 memory_state_cub = { vertices: [...vertices_init_cub], p1: document.getElementById('dropdown-p1-cub').value, p2: document.getElementById('dropdown-p2-cub').value };
-                document.getElementById('slider-angulo-cub').value = 0;
+                sliderCub.value = 0;
+                inputCub.value = 0;
                 update_cubo();
             });
 
