@@ -485,12 +485,12 @@
         function get_pontos_cub(v) {
             return {
                 'Centro do Cubo': MathUtils.mean(v),
-                'Centro Face (1,2,3,4)': MathUtils.mean([v[4],v[5],v[6],v[7]]),
-                "Centro Face (1',2',3',4')": MathUtils.mean([v[0],v[1],v[2],v[3]]),
-                "Centro Face (1,4,2',3')": MathUtils.mean([v[0],v[1],v[5],v[4]]),
-                "Centro Face (2,3,1',4')": MathUtils.mean([v[2],v[3],v[7],v[6]]),
-                "Centro Face (1,2,3',4')": MathUtils.mean([v[1],v[2],v[6],v[5]]),
-                "Centro Face (3,4,1',2')": MathUtils.mean([v[0],v[3],v[7],v[4]]),
+                'Centro C(1,2,3,4)': MathUtils.mean([v[4],v[5],v[6],v[7]]),
+                "Centro C(1',2',3',4')": MathUtils.mean([v[0],v[1],v[2],v[3]]),
+                "Centro C(1,4,2',3')": MathUtils.mean([v[0],v[1],v[5],v[4]]),
+                "Centro C(2,3,1',4')": MathUtils.mean([v[2],v[3],v[7],v[6]]),
+                "Centro C(1,2,3',4')": MathUtils.mean([v[1],v[2],v[6],v[5]]),
+                "Centro C(3,4,1',2')": MathUtils.mean([v[0],v[3],v[7],v[4]]),
                 "Vértice 1": v[5], "Vértice 2": v[6], "Vértice 3": v[7], "Vértice 4": v[4],
                 "Vértice 1'": v[3], "Vértice 2'": v[0], "Vértice 3'": v[1], "Vértice 4'": v[2],
                 "Ponto Médio M(1, 2)": MathUtils.mean([v[5], v[6]]), "Ponto Médio M(2, 3)": MathUtils.mean([v[6], v[7]]),
