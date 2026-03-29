@@ -36,37 +36,35 @@
             color: white;
             display: flex; 
             align-items: center; 
-            border-radius: 15px;
+            border-radius: 0 0 15px 15px; /* Ajustado para não ter borda em cima */
             z-index: 1000;
             gap: 60px;
-            /* box-shadow: 10px 80px 50px rgba(0,0,0,0.1);   */
         }
 
         .sidebar .nav-pills {
             display: flex !important;
             justify-content: flex-end;
             flex-direction: row !important;
-            gap: 40px; /* Espaço entre os itens */
+            gap: 40px; 
             list-style: none;
             margin: 0;
             padding: 0;
-            list-style: none;
         }
 
         .sidebar .nav-pills .nav-link { 
             color: #e0e2e2; 
-            margin-bottom: 0; /* Importante: remove o que empurrava o de baixo */
+            margin-bottom: 0; 
             border-radius: 5px; 
             cursor: pointer;
             padding: 0.2rem 0.3rem;
-            display: inline-block; /* Garante que se comporte como botão */
-            white-space: nowrap; /* Impede que o texto quebre em duas linhas */
+            display: inline-block; 
+            white-space: nowrap; 
         }
         
         .sidebar .nav-pills .nav-link:hover {
-            background-color: #34495e; /* Um tom levemente mais claro que o fundo da barra */
-            color: #6678ff; /* O texto fica verde, ou você pode inverter as cores */
-            transition: all 0.3s ease; /* Faz a mudança ser suave, não instantânea */
+            background-color: #34495e; 
+            color: #6678ff; 
+            transition: all 0.3s ease; 
         }
 
         .sidebar .nav-pills .nav-link.active { 
@@ -74,12 +72,12 @@
             color: white; 
         }
 
-        /* CONTEÚDO: Onde a mágica acontece */
+        /* CONTEÚDO */
         .content {
-            margin-top: 5rem; /* Espaço para não ficar sob o menu (4rem do menu + 1rem de respiro) */
+            margin-top: 5rem; 
             margin-left: auto; 
             margin-right: auto;
-            max-width: 1200px; /* Opcional: limita a largura em telas muito grandes para melhor leitura */
+            max-width: 1200px; 
             padding: 1rem 2rem;
         }
 
@@ -90,6 +88,7 @@
         .control-panel { 
             width: 30%; padding: 20px; border: 1px solid #ddd; 
             background-color: #f9f9f9; border-radius: 10px; 
+            overflow-y: auto; /* Permite rolar os controles se necessário */
         }
         .graph-panel { width: 70%; height: 100%; }
         
@@ -101,7 +100,6 @@
         .math-content p { font-size: 18px; line-height: 1.8; text-align: justify; }
         .math-content .demonstracao { font-style: italic; color: #555; }
         
-        /* Garante que a barra do controle deslizante apareça */
         input[type=range] {
             -webkit-appearance: none; 
             appearance: none;
@@ -109,43 +107,62 @@
             background: transparent; 
         }
 
-        /* Estilo da linha (track) para navegadores baseados em WebKit (Chrome, Edge, Safari) */
         input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 6px;
-            background: #dce4ec; /* Cinza claro combinando com o tema Flatly */
-            border-radius: 5px;
-            cursor: pointer;
+            width: 100%; height: 6px; background: #dce4ec; border-radius: 5px; cursor: pointer;
         }
-
-        /* Estilo da bolinha (thumb) para WebKit */
         input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 18px;
-            width: 18px;
-            border-radius: 50%;
-            background: #2c3e50; /* Azul escuro/cinza do tema */
-            cursor: pointer;
-            margin-top: -6px; /* Centraliza a bolinha na linha */
+            -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%;
+            background: #2c3e50; cursor: pointer; margin-top: -6px; 
         }
-
-        /* Estilo da linha para o Firefox */
         input[type=range]::-moz-range-track {
-            width: 100%;
-            height: 6px;
-            background: #dce4ec;
-            border-radius: 5px;
-            cursor: pointer;
+            width: 100%; height: 6px; background: #dce4ec; border-radius: 5px; cursor: pointer;
+        }
+        input[type=range]::-moz-range-thumb {
+            height: 18px; width: 18px; border-radius: 50%; background: #2c3e50;
+            cursor: pointer; border: none;
         }
 
-        /* Estilo da bolinha para o Firefox */
-        input[type=range]::-moz-range-thumb {
-            height: 18px;
-            width: 18px;
-            border-radius: 50%;
-            background: #2c3e50;
-            cursor: pointer;
-            border: none;
+        /* =========================================================
+           MEDIA QUERIES PARA RESPONSIVIDADE (MOBILE / TABLETS)
+           ========================================================= */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: relative; /* Tira o fixed para evitar que cubra o conteúdo em telas pequenas */
+                height: auto;
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+                border-radius: 0;
+            }
+            .sidebar h4 {
+                margin: 0;
+                font-size: 20px !important;
+                text-align: center;
+            }
+            .sidebar hr {
+                display: none; /* Oculta a linha no mobile */
+            }
+            .sidebar .nav-pills {
+                justify-content: center;
+                gap: 10px;
+                flex-wrap: wrap; /* Permite que os botões quebrem linha */
+            }
+            .content {
+                margin-top: 1rem; /* Ajusta a margem já que o menu não é mais fixed */
+                padding: 1rem;
+            }
+            .solid-container {
+                flex-direction: column; /* Empilha os controles e o gráfico */
+                height: auto;
+            }
+            .control-panel {
+                width: 100%;
+            }
+            .graph-panel {
+                width: 100%;
+                height: 60vh; /* Define uma altura boa para o gráfico no celular */
+                min-height: 400px;
+            }
         }
     </style>
 </head>
@@ -155,15 +172,15 @@
         <h4 class="display-6" style="color: white; font-size: 24px;">Simetrias dos Sólidos de Platão</h4>
         <hr style="border-color: white;">
         <nav class="nav nav-pills flex-column">
-            <a class="nav-link" href="#/" id="nav-home">Fundamentos e Teoremas</a>
+            <a class="nav-link active" href="#/" id="nav-home">Fundamentos e Teoremas</a>
             <a class="nav-link" href="#/tetraedro" id="nav-tet">O Tetraedro (A4)</a>
             <a class="nav-link" href="#/cubo" id="nav-cub">Cubo e Octaedro (S4)</a>
-            </nav>
+        </nav>
     </div>
 
     <div id="page-content" class="content">
         
-        <div id="page-home" class="page math-content">
+        <div id="page-home" class="page math-content active">
             <h1 class="text-primary display-5">Classes de grupos e exemplos notáveis</h1>
             
             <h2>O Grupo Simétrico $S_n$</h2>
@@ -182,7 +199,7 @@
                 $$a^2 t a^{-2} = a(2\,3)a^{-1} = (3\,4)$$
                 <p class="demonstracao">e, em geral, para $k = 1, 2, \dots, n-2$,</p>
                 $$a^k t a^{-k} = (k+1, k+2).$$
-                <p class="demonstracao">Assim, $G$ contém as transposições $(2,3), (3,4), \dots, (n-1, n)$. Como $G$ já contém $t=(1,2)$, concluímos que $G$ contém todas as transposições adjacentes. Pode ser provado que o conjunto de transposições adjacentes geram $S_n$, e todas elas pertencem a $G$, segue que $G$ deve ser o próprio $S_n$. $\blacksquare$</p>
+                <p class="demonstracao">Assim, $G$ contém as transposições $(2,3), (3,4), \dots, (n-1, n)$. Como $G$ já contém $t=(1,2)$, concluímos que $G$ contém todas as transposições adjacentes. Pode ser provado que o conjunto de transposições adjacentes geram $S_n$, e todas elas pertencem a $G$, segue que $G$ deve ser o próprio $S_n$. \(\blacksquare\)</p>
             </div>
 
             <h2>O Grupo Alternado $A_n$</h2>
@@ -194,7 +211,7 @@
             
             <div class="alert alert-light border">
                 <p><strong>Teorema:</strong> Para $n \geq 3$, os $3-$ciclos geram o $A_n$.</p>
-                <p class="demonstracao">Demonstração: Cada $3-$ciclos é uma permutação par, dado um elemento de $A_n$ usamos o corolário para escrever como um produto de pares de transposição da forma $(1a)$. Tome essas transposições em pares adjacentes e combine esses pares usando $(1a)(1b)=(1ba)$. Nosso elemento é agora um produto de $3-$ciclos. $\blacksquare$</p>
+                <p class="demonstracao">Demonstração: Cada $3-$ciclos é uma permutação par, dado um elemento de $A_n$ usamos o corolário para escrever como um produto de pares de transposição da forma $(1a)$. Tome essas transposições em pares adjacentes e combine esses pares usando $(1a)(1b)=(1ba)$. Nosso elemento é agora um produto de $3-$ciclos. \(\blacksquare\)</p>
             </div>
 
             <h2>O Grupo Diedral $D_n$</h2>
@@ -237,12 +254,12 @@
                 $$||f_A(x) - f_A(y)|| = ||x-y||, \quad \forall x,y \in \mathbb{R}^n.$$
                 <p class="demonstracao">Demonstração: Calculando $||f_A(x)||^2$, temos:</p>
                 $$||f_A(x)||^2 = f_A(x)\cdot f_A(x) = (Ax)^t(Ax) = x^tA^tAx = x^tx = ||x||^2 \Rightarrow ||f_A(x)|| = ||x||$$
-                <p class="demonstracao">Logo seu comprimento é preservado. Também, $||f_A(x) - f_A(y)|| = ||f_A(x-y)|| = ||x-y||$, mostra que $f_A$ preserva a distância entre dois pontos. Note que a ortogonalidade também é preservada. $\blacksquare$</p>
+                <p class="demonstracao">Logo seu comprimento é preservado. Também, $||f_A(x) - f_A(y)|| = ||f_A(x-y)|| = ||x-y||$, mostra que $f_A$ preserva a distância entre dois pontos. Note que a ortogonalidade também é preservada. \(\blacksquare\)</p>
             </div>
 
             <div class="alert alert-light border">
                 <p><strong>Teorema:</strong> Seja $A \in SO_3$. Então $A$ é uma rotação em $\mathbb{R}^3$ em torno de um eixo que passa pela origem, isto é, existe um vetor $v \in \mathbb{R}^3 \setminus \{0\}$ tal que $Av = v$ e a restrição de $A$ ao plano ortogonal a $v$ é uma rotação plana.</p>
-                <p class="demonstracao">Demonstração: Seja $A \in SO_3$. Como $A \in O_3$, temos que $A^T A = I$, ou seja, $A$ é uma matriz ortogonal. O polinômio característico de $A$, pelo Teorema Fundamental da Álgebra, possui pelo menos uma raiz real. Como $A \in SO_3$, então $\det A = \lambda_1 \lambda_2 \lambda_3 = 1$. O autovalor real é necessariamente $\lambda_1 = 1$. Seja $v \in \mathbb{R}^3$ um autovetor associado ao autovalor $1$, então $Av = v$. Na base $\{v, v_1, v_2\}$, a matriz $A$ representa uma rotação plana de $SO_2$ sobre o plano ortogonal. Assim, toda matriz de $SO_3$ representa uma rotação em $\mathbb{R}^3$ em torno de um eixo que passa pela origem. $\blacksquare$</p>
+                <p class="demonstracao">Demonstração: Seja $A \in SO_3$. Como $A \in O_3$, temos que $A^T A = I$, ou seja, $A$ é uma matriz ortogonal. O polinômio característico de $A$, pelo Teorema Fundamental da Álgebra, possui pelo menos uma raiz real. Como $A \in SO_3$, então $\det A = \lambda_1 \lambda_2 \lambda_3 = 1$. O autovalor real é necessariamente $\lambda_1 = 1$. Seja $v \in \mathbb{R}^3$ um autovetor associado ao autovalor $1$, então $Av = v$. Na base $\{v, v_1, v_2\}$, a matriz $A$ representa uma rotação plana de $SO_2$ sobre o plano ortogonal. Assim, toda matriz de $SO_3$ representa uma rotação em $\mathbb{R}^3$ em torno de um eixo que passa pela origem. \(\blacksquare\)</p>
             </div>
 
             <h2>Grupos de Simetria dos Sólidos Platônicos</h2>
@@ -274,7 +291,7 @@
 
             <div class="alert alert-light border">
                 <p><strong>Lema:</strong> Se dois sólidos são duais, então eles possuem o mesmo grupo de simetria.</p>
-                <p class="demonstracao">Demonstração: Seja $g$ uma simetria (isometria) que mapeia o poliedro $P$ em si mesmo. Tal transformação $g$ permuta as faces de $P$, e portanto também os seus centros, que correspondem aos vértices de $P^*$. Portanto, toda simetria de $P$ é também uma simetria de $P^*$. Como o dual do dual é o poliedro original, ambos compartilham exatamente o mesmo grupo. $\blacksquare$</p>
+                <p class="demonstracao">Demonstração: Seja $g$ uma simetria (isometria) que mapeia o poliedro $P$ em si mesmo. Tal transformação $g$ permuta as faces de $P$, e portanto também os seus centros, que correspondem aos vértices de $P^*$. Portanto, toda simetria de $P$ é também uma simetria de $P^*$. Como o dual do dual é o poliedro original, ambos compartilham exatamente o mesmo grupo. \(\blacksquare\)</p>
             </div>
 
             <h3>Tetraedro</h3>
@@ -288,7 +305,6 @@
 
             <h2>Classificação de Grupos de Ordem 4</h2>
             <p>Para um grupo de ordem 4, o Teorema de Lagrange indica que seus elementos podem ter ordem 1, 2 ou 4. Se todo elemento não identidade de um grupo $G$ tem ordem 2, então $G$ é o grupo de Klein $V_4$, que é isomorfo ao grupo diedral $D_2$.</p>
-            
             <br><br>
         </div>
 
@@ -310,8 +326,6 @@
                     <div class="d-flex align-items-center gap-2 mb-1">
                         <input type="range" class="form-range flex-grow-1" id="slider-angulo-tet" min="0" max="360" step="1" value="0">
                         <input type="number" class="form-control" id="input-angulo-tet" min="0" max="360" value="0" style="width: 80px;">
-                    </div>
-                    <div class="slider-marks">
                     </div>
                     
                     <button id="btn-reset-tet" class="btn btn-secondary w-100" style="margin-top: 40px;">Resetar Posição Original</button>
@@ -341,8 +355,6 @@
                         <input type="range" class="form-range flex-grow-1" id="slider-angulo-cub" min="0" max="360" step="1" value="0">
                         <input type="number" class="form-control" id="input-angulo-cub" min="0" max="360" value="0" style="width: 80px;">
                     </div>
-                    <div class="slider-marks">
-                    </div>
                     
                     <button id="btn-reset-cub" class="btn btn-secondary w-100" style="margin-top: 40px;">Resetar Posição Original</button>
                 </div>
@@ -352,7 +364,7 @@
             </div>
         </div>
 
-        </div>
+    </div>
 
     <script>
         // ==========================================
@@ -485,12 +497,12 @@
         function get_pontos_cub(v) {
             return {
                 'Centro do Cubo': MathUtils.mean(v),
-                'Centro C(1,2,3,4)': MathUtils.mean([v[4],v[5],v[6],v[7]]),
-                "Centro C(1',2',3',4')": MathUtils.mean([v[0],v[1],v[2],v[3]]),
-                "Centro C(1,4,2',3')": MathUtils.mean([v[0],v[1],v[5],v[4]]),
-                "Centro C(2,3,1',4')": MathUtils.mean([v[2],v[3],v[7],v[6]]),
-                "Centro C(1,2,3',4')": MathUtils.mean([v[1],v[2],v[6],v[5]]),
-                "Centro C(3,4,1',2')": MathUtils.mean([v[0],v[3],v[7],v[4]]),
+                'Centro Face (1,2,3,4)': MathUtils.mean([v[4],v[5],v[6],v[7]]),
+                "Centro Face (1',2',3',4')": MathUtils.mean([v[0],v[1],v[2],v[3]]),
+                "Centro Face (1,4,2',3')": MathUtils.mean([v[0],v[1],v[5],v[4]]),
+                "Centro Face (2,3,1',4')": MathUtils.mean([v[2],v[3],v[7],v[6]]),
+                "Centro Face (1,2,3',4')": MathUtils.mean([v[1],v[2],v[6],v[5]]),
+                "Centro Face (3,4,1',2')": MathUtils.mean([v[0],v[3],v[7],v[4]]),
                 "Vértice 1": v[5], "Vértice 2": v[6], "Vértice 3": v[7], "Vértice 4": v[4],
                 "Vértice 1'": v[3], "Vértice 2'": v[0], "Vértice 3'": v[1], "Vértice 4'": v[2],
                 "Ponto Médio M(1, 2)": MathUtils.mean([v[5], v[6]]), "Ponto Médio M(2, 3)": MathUtils.mean([v[6], v[7]]),
@@ -511,7 +523,8 @@
         // ==========================================
         // CALLBACKS E PLOTAGEM
         // ==========================================
-        const plotlyConfig = { displayModeBar: false }; 
+        // ADICIONADO: responsive: true para ajustar o canvas sozinho
+        const plotlyConfig = { displayModeBar: false, responsive: true }; 
 
         function update_tetraedro() {
             let p1_name = document.getElementById('dropdown-p1-tet').value;
@@ -644,29 +657,23 @@
         function handleRouting() {
             let hash = window.location.hash || '#/'; 
 
-            // Remove classe 'active' de todas as páginas e links
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
 
-            // Mostra a página baseada na rota da URL
             if(hash === '#/') {
                 document.getElementById('page-home').classList.add('active');
                 document.getElementById('nav-home').classList.add('active');
             } else if(hash === '#/tetraedro') {
                 document.getElementById('page-tetraedro').classList.add('active');
                 document.getElementById('nav-tet').classList.add('active');
-                setTimeout(() => Plotly.Plots.resize('grafico-tetraedro'), 50);
+                setTimeout(() => Plotly.Plots.resize('grafico-tetraedro'), 100); // aumentado um pouco o timeout pra garantir renderização no mobile
             } else if(hash === '#/cubo') {
                 document.getElementById('page-cubo').classList.add('active');
                 document.getElementById('nav-cub').classList.add('active');
-                setTimeout(() => Plotly.Plots.resize('grafico-cubo'), 50);
-            } else if(hash === '#/dodecaedro') {
-                document.getElementById('page-dodecaedro').classList.add('active');
-                document.getElementById('nav-dod').classList.add('active');
+                setTimeout(() => Plotly.Plots.resize('grafico-cubo'), 100);
             }
         }
 
-        // Escuta as mudanças de # na URL
         window.addEventListener('hashchange', handleRouting);
 
         window.onload = function() {
@@ -676,7 +683,6 @@
             document.getElementById('dropdown-p1-tet').addEventListener('change', trigger_change_tet);
             document.getElementById('dropdown-p2-tet').addEventListener('change', trigger_change_tet);
             
-            // Sincronização do Slider e Input para o Tetraedro
             const sliderTet = document.getElementById('slider-angulo-tet');
             const inputTet = document.getElementById('input-angulo-tet');
             sliderTet.addEventListener('input', (e) => {
@@ -703,7 +709,6 @@
             document.getElementById('dropdown-p1-cub').addEventListener('change', trigger_change_cub);
             document.getElementById('dropdown-p2-cub').addEventListener('change', trigger_change_cub);
             
-            // Sincronização do Slider e Input para o Cubo
             const sliderCub = document.getElementById('slider-angulo-cub');
             const inputCub = document.getElementById('input-angulo-cub');
             sliderCub.addEventListener('input', (e) => {
@@ -727,7 +732,6 @@
             update_tetraedro();
             update_cubo();
 
-            // Inicia a rota ao carregar a página
             handleRouting();
         };
     </script>
