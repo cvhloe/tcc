@@ -349,8 +349,13 @@
                     
                     <label class="form-label">Eixo de Rotação (Ponto 2):</label>
                     <select id="dropdown-p2-cub" class="form-select mb-3"></select>
+
+                    <div class="form-check form-switch mt-4 mb-3">
+                        <input class="form-check-input" type="checkbox" id="check-diagonais-cub">
+                        <label class="form-check-label" for="check-diagonais-cub">Mostrar Diagonais Principais</label>
+                    </div>
                     
-                    <label class="form-label">Ângulo de Rotação Atual (α):</label>
+                    <label class="form-label mt-2">Ângulo de Rotação Atual (α):</label>
                     <div class="d-flex align-items-center gap-2 mb-1">
                         <input type="range" class="form-range flex-grow-1" id="slider-angulo-cub" min="0" max="360" step="1" value="0">
                         <input type="number" class="form-control" id="input-angulo-cub" min="0" max="360" value="0" style="width: 80px;">
@@ -493,6 +498,9 @@
         const solid_edges_idx_cub = [[5, 6], [6, 7], [7, 4], [4, 5], [5, 1], [7, 3], [4, 0], [3, 0], [0, 1]];
         const dotted_edges_idx_cub = [[1, 2], [2, 3], [6, 2]];
         const faces_dict_cub = { i: [0,0, 0,0, 1,1, 2,2, 0,0, 4,4], j: [1,2, 1,5, 2,6, 3,7, 3,7, 5,6], k: [2,3, 5,4, 6,5, 7,6, 7,4, 6,7] };
+        
+        // ADICIONADO: Índices dos vértices que formam as 4 diagonais principais do cubo
+        const diagonals_idx_cub = [[0, 6], [1, 7], [2, 4], [3, 5]];
 
         function get_pontos_cub(v) {
             return {
@@ -523,7 +531,6 @@
         // ==========================================
         // CALLBACKS E PLOTAGEM
         // ==========================================
-        // ADICIONADO: responsive: true para ajustar o canvas sozinho
         const plotlyConfig = { displayModeBar: false, responsive: true }; 
 
         function update_tetraedro() {
@@ -575,6 +582,10 @@
             let p2_name = document.getElementById('dropdown-p2-cub').value;
             let angulo_graus = parseFloat(document.getElementById('slider-angulo-cub').value);
             let angulo_rad = angulo_graus * (Math.PI / 180);
+            
+            // ADICIONADO: Verifica se o checkbox das diagonais está marcado
+            let check_diagonais = document.getElementById('check-diagonais-cub');
+            let mostrar_diagonais = check_diagonais ? check_diagonais.checked : false;
 
             let current_vertices = memory_state_cub.vertices;
             let curr_pontos = get_pontos_cub(current_vertices);
@@ -597,6 +608,31 @@
             let movDotted = agrupar_arestas(pts_movel, dotted_edges_idx_cub);
             traces.push({ type: 'scatter3d', mode: 'lines', x: movSolid.x_edges, y: movSolid.y_edges, z: movSolid.z_edges, line: {color: 'black', width: 4}, hoverinfo: 'none' });
             traces.push({ type: 'scatter3d', mode: 'lines', x: movDotted.x_edges, y: movDotted.y_edges, z: movDotted.z_edges, line: {color: 'black', width: 3, dash: 'dot'}, hoverinfo: 'none' });
+            
+            // ADICIONADO: Plota as diagonais no cubo que se move, caso marcado
+            if (mostrar_diagonais) {
+                const diagonal_colors = ['#FF4136', '#2ECC40', '#0074D9', '#B10DC9'];
+                
+                diagonals_idx_cub.forEach((diag, index) => {
+                    let p1 = pts_movel[diag[0]];
+                    let p2 = pts_movel[diag[1]];
+                    
+                    traces.push({ 
+                        type: 'scatter3d', 
+                        mode: 'lines', 
+                        x: [p1[0], p2[0]], 
+                        y: [p1[1], p2[1]], 
+                        z: [p1[2], p2[2]], 
+                        line: {
+                            color: diagonal_colors[index], 
+                            width: 4, 
+                            dash: 'dash'  
+                        }, 
+                        hoverinfo: 'none' 
+                    });
+                });
+            }
+
             traces.push({ type: 'scatter3d', mode: 'text', x: pts_movel.map(p=>p[0]), y: pts_movel.map(p=>p[1]), z: pts_movel.map(p=>p[2]), text: labels_movel_cub, textfont: {color: 'black', size: 16}, hoverinfo: 'none' });
 
             if (!MathUtils.allclose(start_curr, end_curr)) {
@@ -666,7 +702,7 @@
             } else if(hash === '#/tetraedro') {
                 document.getElementById('page-tetraedro').classList.add('active');
                 document.getElementById('nav-tet').classList.add('active');
-                setTimeout(() => Plotly.Plots.resize('grafico-tetraedro'), 100); // aumentado um pouco o timeout pra garantir renderização no mobile
+                setTimeout(() => Plotly.Plots.resize('grafico-tetraedro'), 100); 
             } else if(hash === '#/cubo') {
                 document.getElementById('page-cubo').classList.add('active');
                 document.getElementById('nav-cub').classList.add('active');
@@ -709,6 +745,9 @@
             document.getElementById('dropdown-p1-cub').addEventListener('change', trigger_change_cub);
             document.getElementById('dropdown-p2-cub').addEventListener('change', trigger_change_cub);
             
+            // ADICIONADO: Event Listener para o checkbox de diagonais
+            document.getElementById('check-diagonais-cub').addEventListener('change', update_cubo);
+
             const sliderCub = document.getElementById('slider-angulo-cub');
             const inputCub = document.getElementById('input-angulo-cub');
             sliderCub.addEventListener('input', (e) => {
